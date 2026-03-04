@@ -24,6 +24,13 @@ function money(n){
   return `€${Number(n || 0).toFixed(2)}`;
 }
 
+// basePath helps build correct links when pages live in subfolders
+const basePath = (() => {
+  const seg = window.location.pathname.replace(/\\/g,'/').split('/');
+  // if there are more than two segments (empty + filename) we are one level deep
+  return seg.length > 2 ? '../' : '';
+})();
+
 /* -------------------- Session -------------------- */
 function getSession(){
   return JSON.parse(localStorage.getItem("subsonic_session") || "null");
@@ -37,7 +44,7 @@ function clearSession(){
 function requireRole(allowedRoles){
   const s = getSession();
   if(!s || !allowedRoles.includes(s.role)){
-    window.location.href = "login.html";
+    window.location.href = basePath + "auth/login.html";
   }
 }
 
@@ -48,31 +55,31 @@ function renderNav(){
 
   const s = getSession();
   const links = [
-    { href: "events.html", label: "Eventos" },
-    { href: "store.html", label: "Tienda" },
-    { href: "help.html", label: "Ayuda" },
+    { href: `${basePath}events/events.html`, label: "Eventos" },
+    { href: `${basePath}store/store.html`, label: "Tienda" },
+    { href: `${basePath}help/help.html`, label: "Ayuda" },
   ];
 
   // Badge carrito (si existe localStorage store)
   const cartCount = (window.store?.loadCart?.() || []).reduce((a,i)=>a+(i.qty||0),0);
   // mark cart link so we can animate it later
-  links.push({ href: "cart.html", label: `Carrito (${cartCount})`, id: "navCartLink" });
+  links.push({ href: `${basePath}store/cart.html`, label: `Carrito (${cartCount})`, id: "navCartLink" });
 
   if(!s){
-    links.push({ href:"login.html", label:"Mi cuenta" });
+    links.push({ href:`${basePath}auth/login.html`, label:"Mi cuenta" });
   } else if(s.role === "client"){
-    // OJO: tu archivo real es client_dashboard.html (con guion bajo)
-    links.push({ href:"client_dashboard.html", label:"Mi Cuenta" });
-    links.push({ href:"tickets.html", label:"Mis Entradas" });
-    links.push({ href:"orders.html", label:"Mis Pedidos" });
+    // páginas de cliente
+    links.push({ href:`${basePath}client/dashboard.html`, label:"Mi Cuenta" });
+    links.push({ href:`${basePath}client/tickets.html`, label:"Mis Entradas" });
+    links.push({ href:`${basePath}client/orders.html`, label:"Mis Pedidos" });
     links.push({ href:"#", label: `${s.name || "Cliente"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   } else if(s.role === "provider"){
-    links.push({ href:"provider-spaces.html", label:"Espacios" });
+    links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Espacios" });
     links.push({ href:"#", label: `${s.name || "Proveedor"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   } else if(s.role === "admin"){
-    links.push({ href:"admin-edit-event.html", label:"Admin" });
+    links.push({ href:`${basePath}admin/edit-event.html`, label:"Admin" });
     links.push({ href:"#", label: `${s.name || "Admin"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   }
@@ -88,7 +95,7 @@ function renderNav(){
       a.addEventListener("click",(e)=>{
         e.preventDefault();
         clearSession();
-        window.location.href = "index.html";
+        window.location.href = basePath + "index.html";
       });
     }
 
@@ -116,7 +123,7 @@ function pageHome(){
         <h3 class="h-title" style="margin:10px 0 6px 0">${ev.name}</h3>
         <p class="small">${ev.desc}</p>
         <div class="right">
-          <a class="btn secondary" href="event.html?id=${ev.id}">Ver detalle</a>
+          <a class="btn secondary" href="${basePath}events/event.html?id=${ev.id}">Ver detalle</a>
         </div>
       `;
       featured.appendChild(card);
@@ -130,7 +137,7 @@ function pageHome(){
       e.preventDefault();
       const q = ($("#q")?.value || "").trim();
       const date = $("#date")?.value || "";
-      const url = new URL(window.location.origin + "/events.html");
+      const url = new URL(window.location.origin + "/events/events.html");
       if(q) url.searchParams.set("q", q);
       if(date) url.searchParams.set("date", date);
       window.location.href = url.pathname + url.search;
@@ -168,7 +175,7 @@ function pageEvents(){
       <h3 class="h-title" style="margin:10px 0 6px 0">${ev.name}</h3>
       <p class="small">${ev.desc}</p>
       <div class="right">
-        <a class="btn secondary" href="event.html?id=${ev.id}">Ver detalle</a>
+        <a class="btn secondary" href="${basePath}events/event.html?id=${ev.id}">Ver detalle</a>
       </div>
     `;
     list.appendChild(card);
@@ -218,7 +225,7 @@ function pageEventDetail(){
       <h4 class="h-title" style="margin:10px 0 6px 0">${a.name}</h4>
       <p class="small">${a.bio}</p>
       <div class="right">
-        <a class="btn secondary" href="artist.html?id=${a.id}&eventId=${ev.id}">Ver artista</a>
+        <a class="btn secondary" href="${basePath}events/artist.html?id=${a.id}&eventId=${ev.id}">Ver artista</a>
       </div>
     `;
     artistWrap.appendChild(item);
@@ -233,7 +240,7 @@ function pageEventDetail(){
       <div class="badge">${p.name} • €${p.price}</div>
       <p class="small" style="margin:10px 0">${p.includes}</p>
       <div class="row" style="justify-content:flex-end; gap:8px">
-        <a class="btn" href="pass.html?eventId=${ev.id}&passId=${p.id}">Comprar ahora</a>
+        <a class="btn" href="${basePath}events/pass.html?eventId=${ev.id}&passId=${p.id}">Comprar ahora</a>
         <button class="btn secondary add-to-cart" type="button">Añadir al carrito</button>
       </div>
     `;
@@ -288,7 +295,7 @@ function pageArtistDetail(){
   });
 
   const back = $("#backToEvent");
-  back.href = eventId ? `event.html?id=${eventId}` : "events.html";
+  back.href = eventId ? `${basePath}events/event.html?id=${eventId}` : `${basePath}events/events.html`;
 }
 
 function pageLogin(){
@@ -317,10 +324,10 @@ function pageLogin(){
 
     setTimeout(()=>{
       // Redirect based on role
-      if(role === 'client') window.location.href = 'client_dashboard.html';
-      else if(role === 'provider') window.location.href = 'provider-spaces.html';
-      else if(role === 'admin') window.location.href = 'admin-edit-event.html';
-      else window.location.href = 'index.html';
+      if(role === 'client') window.location.href = basePath + 'client/dashboard.html';
+      else if(role === 'provider') window.location.href = basePath + 'spaces/provider-spaces.html';
+      else if(role === 'admin') window.location.href = basePath + 'admin/edit-event.html';
+      else window.location.href = basePath + 'index.html';
     }, 450);
   });
 
@@ -354,7 +361,7 @@ function pageRegister(){
   form.addEventListener("submit",(e)=>{
     e.preventDefault();
     alert("Registro simulado. Ahora inicia sesión.");
-    window.location.href = "login.html";
+    window.location.href = basePath + "auth/login.html";
   });
 }
 
@@ -411,11 +418,11 @@ function pagePass(){
       });
 
       window.saveTickets?.();
-      window.location.href = `purchase-success.html?id=${id}`;
+      window.location.href = `${basePath}client/purchase-success.html?id=${id}`;
     });
   }
 
-  $("#backEvent").href = `event.html?id=${eventId}`;
+  $("#backEvent").href = `${basePath}events/event.html?id=${eventId}`;
 }
 
 function pagePurchaseSuccess(){
@@ -436,8 +443,8 @@ function pagePurchaseSuccess(){
   $("#sPass").textContent = t.passName;
   $("#sCode").textContent = t.code;
 
-  $("#goTickets").href = "tickets.html";
-  $("#goEvents").href = "events.html";
+  $("#goTickets").href = `${basePath}client/tickets.html`;
+  $("#goEvents").href = `${basePath}events/events.html`;
 }
 
 function pageTickets(){
@@ -459,7 +466,7 @@ function pageTickets(){
       <td>${t.passName}</td>
       <td>${formatDate(t.purchaseDate)}</td>
       <td>${t.status}</td>
-      <td><a class="btn secondary" href="ticket.html?id=${t.id}">Ver detalle</a></td>
+      <td><a class="btn secondary" href="${basePath}client/ticket.html?id=${t.id}">Ver detalle</a></td>
     `;
     tbody.appendChild(tr);
   });
@@ -516,7 +523,7 @@ function pageTicketDetail(){
     });
   }
 
-  $("#backTickets").href = "tickets.html";
+  $("#backTickets").href = `${basePath}client/tickets.html`;
 }
 
 function pageProfile(){
@@ -535,11 +542,11 @@ function pageProfile(){
       s.name = ($("#pName").value || "").trim() || s.name;
       setSession(s);
       alert("Cambios guardados (simulado).");
-      window.location.href = "client_dashboard.html";
+      window.location.href = basePath + "client/dashboard.html";
     });
   }
 
-  $("#backDash").href = "client_dashboard.html";
+  $("#backDash").href = `${basePath}client/dashboard.html`;
 }
 
 function pageProviderSpaces(){
@@ -589,7 +596,7 @@ function pageProviderSpaces(){
           Servicios: ${sp.services}
         </p>
         <div class="right">
-          <a class="btn secondary" href="space.html?id=${sp.id}">Ver ficha</a>
+          <a class="btn secondary" href="${basePath}spaces/space.html?id=${sp.id}">Ver ficha</a>
         </div>
       `;
       list.appendChild(card);
@@ -628,12 +635,12 @@ function pageSpaceDetail(){
   $("#spStatus").textContent = sp.status;
 
   const btn = $("#goRequest");
-  btn.href = `space-request.html?id=${sp.id}`;
+  btn.href = `${basePath}spaces/space-request.html?id=${sp.id}`;
   btn.textContent = sp.status === "Disponible" ? "Solicitar alquiler" : "No disponible";
   btn.style.pointerEvents = sp.status === "Disponible" ? "auto" : "none";
   btn.classList.toggle("secondary", sp.status !== "Disponible");
 
-  $("#backSpaces").href = "provider-spaces.html";
+  $("#backSpaces").href = `${basePath}spaces/provider-spaces.html`;
 }
 
 function pageSpaceRequest(){
@@ -657,11 +664,11 @@ function pageSpaceRequest(){
     form.addEventListener("submit",(e)=>{
       e.preventDefault();
       alert("Solicitud enviada (simulada).");
-      window.location.href = "provider-spaces.html";
+      window.location.href = basePath + "spaces/provider-spaces.html";
     });
   }
 
-  $("#backSpace").href = `space.html?id=${sp.id}`;
+  $("#backSpace").href = `${basePath}spaces/space.html?id=${sp.id}`;
 }
 
 /* ============================
@@ -697,7 +704,7 @@ function pageStore(){
         <div class="store-actions">
           <strong class="price">${money(p.price)}</strong>
           <div class="row">
-            <a class="btn" href="product.html?id=${p.id}">Ver</a>
+            <a class="btn" href="${basePath}store/product.html?id=${p.id}">Ver</a>
             <button class="btn secondary add-quick" data-id="${p.id}">Añadir</button>
           </div>
         </div>
@@ -734,7 +741,7 @@ function pageStore(){
     ch.dataset.bound = "1";
     ch.addEventListener("click", ()=>{
       const v = ch.getAttribute("data-cat");
-      window.location.href = v ? `store.html?cat=${encodeURIComponent(v)}` : "store.html";
+      window.location.href = v ? `${basePath}store/store.html?cat=${encodeURIComponent(v)}` : `${basePath}store/store.html`;
     });
   });
 
@@ -807,7 +814,7 @@ function pageProduct(){
       const navLink = document.getElementById('navCartLink'); if(navLink) navLink.textContent = `Carrito (${newCount})`;
       animateCartLink();
       showToastMini("Producto añadido al carrito");
-      setTimeout(()=> window.location.href = "cart.html", 700);
+      setTimeout(()=> window.location.href = basePath + "store/cart.html", 700);
     });
   }
 }
@@ -896,7 +903,7 @@ function pageCart(){
       const s = getSession();
       if(!s || s.role !== "client"){
         alert("Necesitas iniciar sesión como Cliente para comprar.");
-        window.location.href = "login.html";
+        window.location.href = basePath + "auth/login.html";
         return;
       }
       if(cart.length === 0){
@@ -966,7 +973,7 @@ function pageCart(){
       try{ localStorage.setItem('subsonic_last_purchase', JSON.stringify(lastPurchase)); }catch(e){}
 
       alert('Pago simulado: entradas y pedidos procesados.');
-      window.location.href = `purchase-summary.html?id=${lastPurchase.id}`;
+      window.location.href = `${basePath}client/purchase-summary.html?id=${lastPurchase.id}`;
     });
   }
 }
@@ -1029,7 +1036,7 @@ function pageForgotPassword(){
   form.addEventListener("submit",(e)=>{
     e.preventDefault();
     alert("Si el correo existe, recibirás instrucciones (simulado).");
-    window.location.href = "login.html";
+    window.location.href = basePath + "auth/login.html";
   });
 }
 
@@ -1338,7 +1345,7 @@ function pageArtists(){
       <h4 class="h-title" style="margin:10px 0 6px 0">${a.name}</h4>
       <p class="small">${a.bio}</p>
       <div class="right">
-        <a class="btn secondary" href="artist.html?id=${a.id}">Ver</a>
+        <a class="btn secondary" href="${basePath}events/artist.html?id=${a.id}">Ver</a>
       </div>
     `;
     grid.appendChild(card);
@@ -1372,11 +1379,11 @@ function pageSearch(){
     items.forEach(it=>{
       const el = document.createElement('div'); el.className='card';
       if(it.type==='event'){
-        el.innerHTML = `<div class="badge">${formatDate(it.data.date)}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="event.html?id=${it.data.id}">Ver</a></div>`;
+        el.innerHTML = `<div class="badge">${formatDate(it.data.date)}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="${basePath}events/event.html?id=${it.data.id}">Ver</a></div>`;
       } else if(it.type==='artist'){
-        el.innerHTML = `<div class="badge">${it.data.genre}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.bio}</p><div class="right"><a class="btn secondary" href="artist.html?id=${it.data.id}">Ver</a></div>`;
+        el.innerHTML = `<div class="badge">${it.data.genre}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.bio}</p><div class="right"><a class="btn secondary" href="${basePath}events/artist.html?id=${it.data.id}">Ver</a></div>`;
       } else {
-        el.innerHTML = `<div class="badge">${it.data.category}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="product.html?id=${it.data.id}">Ver</a></div>`;
+        el.innerHTML = `<div class="badge">${it.data.category}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="${basePath}store/product.html?id=${it.data.id}">Ver</a></div>`;
       }
       results.appendChild(el);
     });
@@ -1426,7 +1433,7 @@ function pageChangePassword(){
     const email = ($('#cpEmail')?.value||'').trim();
     if(!email) return alert('Introduce un correo.');
     alert('Si el correo existe, recibirás instrucciones (simulado).');
-    window.location.href = 'login.html';
+    window.location.href = basePath + 'auth/login.html';
   });
 }
 
@@ -1564,7 +1571,7 @@ function pageAdminCreateEvent(){
 
       window.saveDB?.();
       alert('Evento guardado (simulado)');
-      window.location.href = 'admin-edit-event.html';
+      window.location.href = basePath + 'admin/edit-event.html';
     });
   }
 }
@@ -1594,7 +1601,7 @@ function pageAdminEditEvent(){
       <p class="small">${ev.desc || ''}</p>
       ${artistNames ? `<p class="small"><strong>Artistas:</strong> ${artistNames}</p>` : ''}
       <div class="right">
-        <a class="btn secondary" href="admin-create-event.html?id=${ev.id}">Editar</a>
+        <a class="btn secondary" href="${basePath}admin/create-event.html?id=${ev.id}">Editar</a>
         <button class="btn danger btn-del-evt" data-id="${ev.id}">Eliminar</button>
       </div>
     `;
@@ -1627,7 +1634,7 @@ function pageAdminEntries(){
       ev.passes.push({ id: Date.now(), name, price, includes: 'Entrada admin' });
       window.saveDB?.();
       alert('Tipo de entrada añadido (simulado)');
-      window.location.href='admin-edit-event.html';
+      window.location.href= basePath + 'admin/edit-event.html';
     } else alert('Evento no encontrado');
   });
 }
