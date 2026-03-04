@@ -55,7 +55,8 @@ function renderNav(){
 
   // Badge carrito (si existe localStorage store)
   const cartCount = (window.store?.loadCart?.() || []).reduce((a,i)=>a+(i.qty||0),0);
-  links.push({ href: "cart.html", label: `Carrito (${cartCount})` });
+  // mark cart link so we can animate it later
+  links.push({ href: "cart.html", label: `Carrito (${cartCount})`, id: "navCartLink" });
 
   if(!s){
     links.push({ href:"login.html", label:"Mi cuenta" });
@@ -92,6 +93,8 @@ function renderNav(){
     }
 
     nav.appendChild(a);
+    // attach id attribute if present in link descriptor
+    if(l.id) a.id = l.id;
   });
 }
 
@@ -717,7 +720,10 @@ function pageStore(){
       const item = cart.find(x=>x.key===key);
       if(item) item.qty += 1; else cart.push({ key, productId:prod.id, size:'M', qty:1 });
       window.store.saveCart(cart);
-      const badge = $("#cartCount"); if(badge) badge.textContent = String(cart.reduce((a,i)=>a+(i.qty||0),0));
+      const newCount = cart.reduce((a,i)=>a+(i.qty||0),0);
+      const badge = $("#cartCount"); if(badge) badge.textContent = String(newCount);
+      const navLink = document.getElementById('navCartLink'); if(navLink) navLink.textContent = `Carrito (${newCount})`;
+      animateCartLink();
       showToastMini('Añadido al carrito');
     });
   });
@@ -797,6 +803,9 @@ function pageProduct(){
       else cart.push({ key, productId:p.id, size, qty });
 
       window.store.saveCart(cart);
+      const newCount = cart.reduce((a,i)=>a+(i.qty||0),0);
+      const navLink = document.getElementById('navCartLink'); if(navLink) navLink.textContent = `Carrito (${newCount})`;
+      animateCartLink();
       showToastMini("Producto añadido al carrito");
       setTimeout(()=> window.location.href = "cart.html", 700);
     });
@@ -1132,6 +1141,13 @@ if(document.readyState === 'loading') {
 }
 
 /* -------------------- Cart helpers for tickets -------------------- */
+function animateCartLink(){
+  const el = document.getElementById("navCartLink");
+  if(!el) return;
+  el.classList.add("bump");
+  el.addEventListener("animationend", ()=> el.classList.remove("bump"), { once: true });
+}
+
 function addTicketToCart(eventId, passId, qty){
   const cart = window.store.loadCart();
   // Backwards compatible: if eventId is an object (opts), normalize
@@ -1142,6 +1158,7 @@ function addTicketToCart(eventId, passId, qty){
     if(existing){ existing.qty = (existing.qty||0) + (opts.qty||1); }
     else cart.push({ key, type:'ticket', eventId: opts.eventId || null, eventName: opts.eventName || null, passId: opts.passId || null, passName: opts.passName || null, price: opts.price || null, qty: opts.qty || 1 });
     window.store.saveCart(cart);
+    animateCartLink();
     return;
   }
 
@@ -1153,12 +1170,19 @@ function addTicketToCart(eventId, passId, qty){
     cart.push({ key, type: 'ticket', eventId: eventId || null, passId: passId || null, qty: qty || 1 });
   }
   window.store.saveCart(cart);
+  animateCartLink();
 }
 
 function addFestivalPassToCart(eventName, passName, price, qty){
   const opts = { eventId: null, eventName: eventName, passId: null, passName: passName, price: price || 0, qty: qty || 1 };
   addTicketToCart(opts);
-  renderNav();
+  // After addTicketToCart runs, it already calls animateCartLink
+  // Just update the cart counter and nav text, then animate
+  const cart = window.store.loadCart();
+  const newCount = cart.reduce((a,i)=>a+(i.qty||0),0);
+  const navLink = document.getElementById('navCartLink');
+  if(navLink) navLink.textContent = `Carrito (${newCount})`;
+  animateCartLink();
 }
 
 /* -------------------- UI: Toast & Modal -------------------- */

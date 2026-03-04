@@ -143,6 +143,17 @@ header{
   background: rgba(255,255,255,.03);
 }
 
+/* Cart animation when items are added */
+#navCartLink.bump {
+  animation: cart-bump 0.4s ease-out;
+}
+
+@keyframes cart-bump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
 /* =========================================================
    Cards / Buttons / Badges
    ========================================================= */
