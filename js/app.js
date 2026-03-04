@@ -65,15 +65,15 @@ function renderNav(){
     links.push({ href:"client_dashboard.html", label:"Mi Cuenta" });
     links.push({ href:"tickets.html", label:"Mis Entradas" });
     links.push({ href:"orders.html", label:"Mis Pedidos" });
-    links.push({ href:"#", label:`👤 ${s.name || "Cliente"}`, action:"noop" });
+    links.push({ href:"#", label: `${s.name || "Cliente"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   } else if(s.role === "provider"){
     links.push({ href:"provider-spaces.html", label:"Espacios" });
-    links.push({ href:"#", label:`🏷️ ${s.name || "Proveedor"}`, action:"noop" });
+    links.push({ href:"#", label: `${s.name || "Proveedor"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   } else if(s.role === "admin"){
     links.push({ href:"admin-edit-event.html", label:"Admin" });
-    links.push({ href:"#", label:`🛠️ ${s.name || "Admin"}`, action:"noop" });
+    links.push({ href:"#", label: `${s.name || "Admin"}`, action:"noop" });
     links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
   }
 
@@ -112,7 +112,7 @@ function pageHome(){
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <div class="badge">📅 ${formatDate(ev.date)} • 📍 ${ev.city} • 🎤 ${ev.venue}</div>
+        <div class="badge">${formatDate(ev.date)} • ${ev.city} • ${ev.venue}</div>
         <h3 class="h-title" style="margin:10px 0 6px 0">${ev.name}</h3>
         <p class="small">${ev.desc}</p>
         <div class="right">
@@ -164,7 +164,7 @@ function pageEvents(){
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <div class="badge">📅 ${formatDate(ev.date)} • 📍 ${ev.city}</div>
+      <div class="badge">${formatDate(ev.date)} • ${ev.city}</div>
       <h3 class="h-title" style="margin:10px 0 6px 0">${ev.name}</h3>
       <p class="small">${ev.desc}</p>
       <div class="right">
@@ -214,7 +214,7 @@ function pageEventDetail(){
     const item = document.createElement("div");
     item.className = "card";
     item.innerHTML = `
-      <div class="badge">🎧 ${a.genre}</div>
+      <div class="badge">${a.genre}</div>
       <h4 class="h-title" style="margin:10px 0 6px 0">${a.name}</h4>
       <p class="small">${a.bio}</p>
       <div class="right">
@@ -230,7 +230,7 @@ function pageEventDetail(){
     const item = document.createElement("div");
     item.className = "card";
     item.innerHTML = `
-      <div class="badge">🎟️ ${p.name} • €${p.price}</div>
+      <div class="badge">${p.name} • €${p.price}</div>
       <p class="small" style="margin:10px 0">${p.includes}</p>
       <div class="row" style="justify-content:flex-end; gap:8px">
         <a class="btn" href="pass.html?eventId=${ev.id}&passId=${p.id}">Comprar ahora</a>
@@ -279,7 +279,7 @@ function pageArtistDetail(){
     row.className = "card";
     row.innerHTML = `
       <div class="row" style="justify-content:space-between">
-        <div>🎵 ${t}</div>
+        <div>${t}</div>
         <button class="btn secondary" type="button">▶ Preview</button>
       </div>
     `;
@@ -581,7 +581,7 @@ function pageProviderSpaces(){
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <div class="badge">🏷️ ${sp.type} • 📏 ${sp.size} • €${sp.pricePerDay}/día</div>
+        <div class="badge">${sp.type} • ${sp.size} • €${sp.pricePerDay}/día</div>
         <h3 class="h-title" style="margin:10px 0 6px 0">${sp.location}</h3>
         <p class="small">
           Evento: <strong>${ev ? ev.name : "—"}</strong><br/>
@@ -841,7 +841,7 @@ function pageCart(){
       row.innerHTML = `
         <div class="row" style="justify-content:space-between">
           <div>
-            <div class="badge">🎟️ ${passTitle}</div>
+            <div class="badge">${passTitle}</div>
             <h3 class="h-title" style="margin:8px 0 4px 0">${eventTitle}</h3>
             <p class="small">${money(price)} • Cantidad: ${it.qty}</p>
           </div>
@@ -1283,7 +1283,7 @@ function pagePurchaseSummary(){
     const title = ev ? ev.name : (t.eventName || 'Evento');
     ticketsHtml.push(`
       <div class="card">
-        <div class="badge">🎫 ${title}</div>
+        <div class="badge">${title}</div>
         <h4 class="h-title">${t.passName}</h4>
         <p class="small">Código: <strong>${t.code}</strong> — Fecha compra: ${formatDate(t.purchaseDate)}</p>
       </div>
@@ -1334,7 +1334,7 @@ function pageArtists(){
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="badge">🎤 ${a.genre}</div>
+      <div class="badge">${a.genre}</div>
       <h4 class="h-title" style="margin:10px 0 6px 0">${a.name}</h4>
       <p class="small">${a.bio}</p>
       <div class="right">
@@ -1372,9 +1372,9 @@ function pageSearch(){
     items.forEach(it=>{
       const el = document.createElement('div'); el.className='card';
       if(it.type==='event'){
-        el.innerHTML = `<div class="badge">📅 ${formatDate(it.data.date)}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="event.html?id=${it.data.id}">Ver</a></div>`;
+        el.innerHTML = `<div class="badge">${formatDate(it.data.date)}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="event.html?id=${it.data.id}">Ver</a></div>`;
       } else if(it.type==='artist'){
-        el.innerHTML = `<div class="badge">🎧 ${it.data.genre}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.bio}</p><div class="right"><a class="btn secondary" href="artist.html?id=${it.data.id}">Ver</a></div>`;
+        el.innerHTML = `<div class="badge">${it.data.genre}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.bio}</p><div class="right"><a class="btn secondary" href="artist.html?id=${it.data.id}">Ver</a></div>`;
       } else {
         el.innerHTML = `<div class="badge">${it.data.category}</div><h4 class="h-title">${it.data.name}</h4><p class="small">${it.data.desc}</p><div class="right"><a class="btn secondary" href="product.html?id=${it.data.id}">Ver</a></div>`;
       }
@@ -1399,7 +1399,7 @@ function pageTicketsPurchase(){
   const pkgs = $('#ticketPackages'); if(pkgs){ pkgs.innerHTML=''; ev.passes.forEach(p=>{
     const div = document.createElement('div'); div.className='card';
     div.innerHTML = `
-      <div class="badge">🎟️ ${p.name} • ${money(p.price)}</div>
+      <div class="badge">${p.name} • ${money(p.price)}</div>
       <p class="small">${p.includes}</p>
       <div class="row" style="justify-content:flex-end; gap:8px">
         <input type="number" min="1" value="1" class="field ticket-qty" style="width:84px" />
@@ -1457,7 +1457,7 @@ function pageAdminCreateEvent(){
     const list = (ev && ev.passes) ? ev.passes.slice() : [];
     list.forEach(p=>{
       const d = document.createElement('div'); d.className='card';
-      d.innerHTML = `<div class="badge">🎟️ ${p.name} • ${money(p.price)}</div><p class="small">${p.includes||''}</p><div class="right"><button class="btn danger btn-del-pass" data-id="${p.id}">Eliminar</button></div>`;
+      d.innerHTML = `<div class="badge">${p.name} • ${money(p.price)}</div><p class="small">${p.includes||''}</p><div class="right"><button class="btn danger btn-del-pass" data-id="${p.id}">Eliminar</button></div>`;
       d.querySelector('.btn-del-pass').addEventListener('click', ()=>{
         if(!confirm('Eliminar tipo de entrada?')) return;
         ev.passes = (ev.passes || []).filter(x=>x.id !== p.id);
@@ -1589,7 +1589,7 @@ function pageAdminEditEvent(){
     }).filter(Boolean).join(', ');
 
     d.innerHTML = `
-      <div class="badge">📅 ${formatDate(ev.date)}</div>
+      <div class="badge">${formatDate(ev.date)}</div>
       <h4 class="h-title">${ev.name}</h4>
       <p class="small">${ev.desc || ''}</p>
       ${artistNames ? `<p class="small"><strong>Artistas:</strong> ${artistNames}</p>` : ''}
@@ -1639,10 +1639,10 @@ function pageAdminArtists(){
   const list = $('#adminArtistsList');
   if(list) list.innerHTML='';
   // render existing artists
-  (DB.artists || []).forEach(a=>{
+    (DB.artists || []).forEach(a=>{
     if(!list) return;
     const d = document.createElement('div'); d.className='card';
-    d.innerHTML = `<div class="badge">🎤 ${a.genre||''}</div><h4 class="h-title">${a.name}</h4><p class="small">${a.bio||''}</p>`;
+    d.innerHTML = `<div class="badge">${a.genre||''}</div><h4 class="h-title">${a.name}</h4><p class="small">${a.bio||''}</p>`;
     list.appendChild(d);
   });
 
