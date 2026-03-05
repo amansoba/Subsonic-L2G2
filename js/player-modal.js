@@ -33,8 +33,8 @@
     trackArtist && (trackArtist.textContent = artistName);
 
     if(img){
-      img.src = `fotos_artistas/${slugify(artistName)}.jpg`;
-      img.onerror = function(){ this.onerror=null; this.src = 'fotos_artistas/placeholder.jpg'; };
+      img.src = `../fotos_artistas/${slugify(artistName)}.jpg`;
+      img.onerror = function(){ this.onerror=null; this.src = '../fotos_artistas/placeholder.jpg'; };
     }
 
     modal.setAttribute('aria-hidden','false');
@@ -60,7 +60,7 @@
     const track = card.dataset.track || 'Live Set';
     playerArtist && (playerArtist.textContent = artist);
     playerTrack && (playerTrack.textContent = track);
-    if(playerCover){ playerCover.src = `fotos_artistas/${slugify(artist)}.jpg`; playerCover.onerror = function(){ this.onerror=null; this.src='fotos_artistas/placeholder.jpg'; }; }
+    if(playerCover){ playerCover.src = `../fotos_artistas/${slugify(artist)}.jpg`; playerCover.onerror = function(){ this.onerror=null; this.src='../fotos_artistas/placeholder.jpg'; }; }
     overlay.style.display = 'flex'; overlay.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden';
     return true;
   }

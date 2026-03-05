@@ -469,7 +469,7 @@ input:focus, select:focus, textarea:focus{
   min-height: 260px;
   background:
     linear-gradient(180deg, rgba(7,7,11,.25), rgba(7,7,11,.92)),
-    url("../assets/img/hero.jpg");
+    url("../fotos_principales/principal.jpg");
   background-size: cover;
   background-position: center;
   box-shadow: var(--shadow);

@@ -692,7 +692,7 @@ function pageStore(){
   filtered.forEach(p=>{
     const card = document.createElement("article");
     card.className = "store-card card";
-    const img = (p.images && p.images.length) ? p.images[0] : 'assets/img/event1.jpg';
+    const img = (p.images && p.images.length) ? p.images[0] : '../fotos_principales/principal.jpg';
     card.innerHTML = `
       <div class="store-media" style="background-image:url('${img}')"></div>
       <div class="store-overlay">
@@ -766,7 +766,7 @@ function pageProduct(){
 
   const main = $("#prMainImg");
   const thumbs = $("#prThumbs");
-  if(main) main.src = (p.images && p.images[0]) || 'assets/img/event1.jpg';
+  if(main) main.src = (p.images && p.images[0]) || '../fotos_principales/principal.jpg';
 
   if(thumbs){
     thumbs.innerHTML = "";
@@ -1399,7 +1399,7 @@ function pageTicketsPurchase(){
   const id = Number(getQueryParam('id') || getQueryParam('eventId'));
   const ev = DB.events.find(e=>e.id===id) || DB.events[0];
   if(!ev) return;
-  const img = $('#evImage'); if(img) img.src = ev.image || 'assets/img/event1.jpg';
+  const img = $('#evImage'); if(img) img.src = ev.image || '../fotos_principales/principal.jpg';
   const title = $('#evTitle'); if(title) title.textContent = ev.name;
   const info = $('#evInfo'); if(info) info.textContent = `${formatDate(ev.date)} • ${ev.venue} • ${ev.city}`;
 
@@ -1666,7 +1666,7 @@ function pageAdminArtists(){
       DB.artists.push({ id: Date.now(), name, genre:'', bio, topTracks:[], image: photo||'', spotify: spotify||'' });
       window.saveDB?.();
       alert('Artista añadido (simulado)');
-      window.location.href='admin-artists.html';
+      window.location.href= basePath + 'admin/artists.html';
     });
   }
 }
@@ -1674,7 +1674,7 @@ function pageAdminArtists(){
 function pageAdminAddSpace(){
   requireRole(['admin']);
   renderNav();
-  const f = $('#addSpaceForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const desc=fm.get('desc'); const price=Number(fm.get('price')||0); const image=fm.get('image'); DB.spaces.push({ id: Date.now(), eventId: null, type:name, size:'', location:desc, pricePerDay: price, status:'Disponible', services:'', notes:'', }); window.saveDB?.(); alert('Espacio añadido (simulado)'); window.location.href='admin-manage-spaces.html'; }); }
+  const f = $('#addSpaceForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const desc=fm.get('desc'); const price=Number(fm.get('price')||0); const image=fm.get('image'); DB.spaces.push({ id: Date.now(), eventId: null, type:name, size:'', location:desc, pricePerDay: price, status:'Disponible', services:'', notes:'', }); window.saveDB?.(); alert('Espacio añadido (simulado)'); window.location.href= basePath + 'admin/manage-spaces.html'; }); }
 
 function pageAdminManageSpaces(){
   requireRole(['admin']);
@@ -1684,7 +1684,7 @@ function pageAdminManageSpaces(){
 function pageAdminAddProduct(){
   requireRole(['admin']);
   renderNav();
-  const f=$('#addProductForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const sizes=(fm.get('sizes')||'').split(',').map(s=>s.trim()).filter(Boolean); const price=Number(fm.get('price')||0); const images=(fm.get('images')||'').split(',').map(s=>s.trim()).filter(Boolean); DB.products.push({ id: Date.now(), name, price, category:'Nuevo', gender:'Unisex', sizes, desc:'(creado admin)', images }); window.saveDB?.(); alert('Producto añadido (simulado)'); window.location.href='admin-edit-product.html'; }); }
+  const f=$('#addProductForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const sizes=(fm.get('sizes')||'').split(',').map(s=>s.trim()).filter(Boolean); const price=Number(fm.get('price')||0); const images=(fm.get('images')||'').split(',').map(s=>s.trim()).filter(Boolean); DB.products.push({ id: Date.now(), name, price, category:'Nuevo', gender:'Unisex', sizes, desc:'(creado admin)', images }); window.saveDB?.(); alert('Producto añadido (simulado)'); window.location.href= basePath + 'admin/edit-product.html'; }); }
 
 function pageAdminEditProduct(){
   requireRole(['admin']);
@@ -1709,7 +1709,7 @@ function pageAdminEditProduct(){
 // Sample artist data structure (ready for Spotify API)
 const ARTIST_TRACKS = {
   'Amelie Lens': {
-    imageUrl: 'fotos_artistas/amelie-lens.jpg',
+    imageUrl: '../fotos_artistas/amelie-lens.jpg',
     tracks: [
       { title: 'Untamed', artist: 'Amelie Lens', duration: '3:45' },
       { title: 'Emergence', artist: 'Amelie Lens', duration: '4:12' },
@@ -1717,80 +1717,80 @@ const ARTIST_TRACKS = {
     ]
   },
   'John Digweed': {
-    imageUrl: 'fotos_artistas/john-digweed.jpg',
+    imageUrl: '../fotos_artistas/john-digweed.jpg',
     tracks: [
       { title: 'Rhythmic Injection', artist: 'John Digweed', duration: '4:00' },
       { title: 'Progression', artist: 'John Digweed', duration: '3:52' }
     ]
   },
   'Charlotte de Witte': {
-    imageUrl: 'fotos_artistas/charlotte-de-witte.jpg',
+    imageUrl: '../fotos_artistas/charlotte-de-witte.jpg',
     tracks: [
       { title: 'Core Motion', artist: 'Charlotte de Witte', duration: '4:15' }
     ]
   },
   'David Guetta': {
-    imageUrl: 'fotos_artistas/david-guetta.jpg',
+    imageUrl: '../fotos_artistas/david-guetta.jpg',
     tracks: [
       { title: 'Future Track', artist: 'David Guetta', duration: '3:30' }
     ]
   },
   'Ólafur Arnalds': {
-    imageUrl: 'fotos_artistas/olafur-arnalds.jpg',
+    imageUrl: '../fotos_artistas/olafur-arnalds.jpg',
     tracks: [
       { title: 'Ethereal Moment', artist: 'Ólafur Arnalds', duration: '4:45' }
     ]
   },
   'Deadmau5': {
-    imageUrl: 'fotos_artistas/deadmau5.jpg',
+    imageUrl: '../fotos_artistas/deadmau5.jpg',
     tracks: [
       { title: 'While 1 < 2', artist: 'Deadmau5', duration: '4:10' }
     ]
   },
   'Sasha': {
-    imageUrl: 'fotos_artistas/sasha.jpg',
+    imageUrl: '../fotos_artistas/sasha.jpg',
     tracks: [
       { title: 'Freedom', artist: 'Sasha', duration: '3:55' }
     ]
   },
   'Adam Beyer': {
-    imageUrl: 'fotos_artistas/adam-beyer.jpg',
+    imageUrl: '../fotos_artistas/adam-beyer.jpg',
     tracks: [
       { title: 'Rave', artist: 'Adam Beyer', duration: '4:20' }
     ]
   },
   'Disclosure': {
-    imageUrl: 'fotos_artistas/disclosure.jpg',
+    imageUrl: '../fotos_artistas/disclosure.jpg',
     tracks: [
       { title: 'Latch', artist: 'Disclosure', duration: '3:28' }
     ]
   },
   'Jon Hopkins': {
-    imageUrl: 'fotos_artistas/jon-hopkins.jpg',
+    imageUrl: '../fotos_artistas/jon-hopkins.jpg',
     tracks: [
       { title: 'Emerald Rush', artist: 'Jon Hopkins', duration: '4:30' }
     ]
   },
   'Richie Hawtin': {
-    imageUrl: 'fotos_artistas/richie-hawtin.jpg',
+    imageUrl: '../fotos_artistas/richie-hawtin.jpg',
     tracks: [
       { title: 'Plastikman', artist: 'Richie Hawtin', duration: '4:50' }
     ]
   },
   'Tale of Us': {
-    imageUrl: 'fotos_artistas/tale-of-us.jpg',
+    imageUrl: '../fotos_artistas/tale-of-us.jpg',
     tracks: [
       { title: 'Such a Lonely Day', artist: 'Tale of Us', duration: '4:05' }
     ]
   },
   'Ben Klock': {
-    imageUrl: 'fotos_artistas/ben-klock.jpg',
+    imageUrl: '../fotos_artistas/ben-klock.jpg',
     tracks: [
       { title: 'Techno Sound', artist: 'Ben Klock', duration: '4:25' }
     ]
   },
   'Fisher': {
-    imageUrl: 'fotos_artistas/fisher.jpg',
+    imageUrl: '../fotos_artistas/fisher.jpg',
     tracks: [
       { title: 'Losing It', artist: 'Fisher', duration: '3:40' }
     ]
@@ -1805,7 +1805,7 @@ function getArtistData(artistName) {
   
   // Return generic track if artist not found
   return {
-    imageUrl: `fotos_artistas/${artistName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
+    imageUrl: `../fotos_artistas/${artistName.toLowerCase().replace(/\s+/g, '-')}.jpg`,
     tracks: [
       { title: 'Track 1', artist: artistName, duration: '3:45' },
       { title: 'Track 2', artist: artistName, duration: '4:00' },
