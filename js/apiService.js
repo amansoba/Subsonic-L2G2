@@ -194,3 +194,37 @@ export const getExperiences = async () => {
   }
 };
 
+/**
+ * Fetches a single product by its ID.
+ * @param {number} productId The ID of the product to fetch.
+ * @returns {Promise<Object>} A promise that resolves to the product object.
+ */
+export const getProductById = async (productId) => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log(`Using mock backend for product ${productId}.`);
+    await simulateLatency();
+    
+    const products = await getAllProducts(); // Reuse existing function
+    const product = products.find(p => p.id === productId);
+
+    if (!product) {
+      throw new Error(`Product with ID ${productId} not found in mock data.`);
+    }
+    return product;
+  } else {
+    console.log(`Using real backend for product ${productId}.`);
+    const url = `${config.API_BASE_URL}/products/${productId}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const product = await response.json();
+      return product;
+    } catch (error) {
+      console.error(`Failed to fetch product ${productId} from real API:`, error);
+      throw error;
+    }
+  }
+};
+
