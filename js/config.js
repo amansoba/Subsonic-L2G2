@@ -5,6 +5,7 @@ export const config = {
     events: '../mocks/events.json',
     artists: '../mocks/artists.json',
     products: '../mocks/products.json',
-    experiences: '../mocks/experiences.json'
+    experiences: '../mocks/experiences.json',
+    users: '../mocks/users.json'
   }
 };

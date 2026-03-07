@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "username": "testuser",
+    "email": "testuser@subsonic.com",
+    "name": "Alex Doe",
+    "joinDate": "2024-01-15",
+    "orders": [
+      {
+        "orderId": "ORD-12345",
+        "date": "2024-03-10",
+        "total": 134,
+        "items": [
+          { "productId": 1, "name": "Subsonic Cap — Black Classic", "quantity": 1, "price": 34 },
+          { "productId": 5, "name": "Subsonic Hoodie — Neon Nights", "quantity": 1, "price": 69 },
+          { "productId": 6, "name": "Subsonic Tee — Electric Dawn", "quantity": 1, "price": 29 }
+        ]
+      },
+      {
+        "orderId": "ORD-67890",
+        "date": "2024-02-20",
+        "total": 68,
+        "items": [
+          { "productId": 1, "name": "Subsonic Cap — Black Classic", "quantity": 2, "price": 34 }
+        ]
+      }
+    ],
+    "tickets": [
+      {
+        "ticketId": "TKT-ABCDE",
+        "eventId": 1,
+        "eventName": "Subsonic Barcelona",
+        "passName": "VIP",
+        "purchaseDate": "2024-01-20",
+        "qrCode": "path/to/qr-code-1.png"
+      },
+      {
+        "ticketId": "TKT-FGHIJ",
+        "eventId": 3,
+        "eventName": "Subsonic Madrid",
+        "passName": "General",
+        "purchaseDate": "2024-02-05",
+        "qrCode": "path/to/qr-code-2.png"
+      }
+    ]
+  }
+]

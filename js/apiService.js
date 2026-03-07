@@ -262,3 +262,42 @@ export const getArtistById = async (artistId) => {
   }
 };
 
+/**
+ * Fetches a user profile by their ID.
+ * @param {number} userId The ID of the user to fetch.
+ * @returns {Promise<Object>} A promise that resolves to the user object.
+ */
+export const getUserProfile = async (userId) => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log(`Using mock backend for user ${userId}.`);
+    await simulateLatency();
+    
+    const response = await fetch(config.MOCK_DATA_PATHS.users);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const users = await response.json();
+    const user = users.find(u => u.id === userId);
+
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found in mock data.`);
+    }
+    return user;
+  } else {
+    console.log(`Using real backend for user ${userId}.`);
+    const url = `${config.API_BASE_URL}/users/${userId}`;
+    try {
+      // Here you would also include authentication headers
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const user = await response.json();
+      return user;
+    } catch (error) {
+      console.error(`Failed to fetch user ${userId} from real API:`, error);
+      throw error;
+    }
+  }
+};
+
