@@ -3,6 +3,7 @@ export const config = {
   API_BASE_URL: 'https://api.subsonic.com/v1',
   MOCK_DATA_PATHS: {
     events: '../mocks/events.json',
-    artists: '../mocks/artists.json'
+    artists: '../mocks/artists.json',
+    products: '../mocks/products.json'
   }
 };

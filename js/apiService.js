@@ -132,3 +132,34 @@ export const getAllArtists = async () => {
   }
 };
 
+/**
+ * Fetches all products.
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of all products.
+ */
+export const getAllProducts = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log("Using mock backend for all products.");
+    await simulateLatency();
+    const response = await fetch(config.MOCK_DATA_PATHS.products);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const products = await response.json();
+    return products;
+  } else {
+    console.log("Using real backend for all products.");
+    const url = `${config.API_BASE_URL}/products`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const products = await response.json();
+      return products;
+    } catch (error) {
+      console.error("Failed to fetch all products from real API:", error);
+      throw error;
+    }
+  }
+};
+

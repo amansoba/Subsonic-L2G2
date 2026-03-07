@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Subsonic Cap — Black Classic",
+    "price": 34,
+    "category": "Nuevo",
+    "gender": "Hombre",
+    "sizes": ["One Size"],
+    "desc": "Gorra ajustable con bordado Subsonic en negro clásico. Algodón premium con cierre de velcro. Festival essential.",
+    "images": ["../fotos_store/g1.jpg"]
+  },
+  {
+    "id": 2,
+    "name": "Subsonic Cap — Gold Edition",
+    "price": 39,
+    "category": "Nuevo",
+    "gender": "Mujer",
+    "sizes": ["One Size"],
+    "desc": "Gorra premium con logo dorado bordado. Colores vibrantes festival edition. Visera estructura reforzada.",
+    "images": ["../fotos_store/g2.jpg"]
+  },
+  {
+    "id": 3,
+    "name": "Subsonic Cap — Neon Pulse",
+    "price": 39,
+    "category": "Nuevo",
+    "gender": "Unisex",
+    "sizes": ["One Size"],
+    "desc": "Gorra con detalles neón fluorescentes. Diseño statement para festivales nocturnos. Reflective technology.",
+    "images": ["../fotos_store/g3.jpg"]
+  },
+  {
+    "id": 4,
+    "name": "Subsonic Cap — White Signature",
+    "price": 34,
+    "category": "Nuevo",
+    "gender": "Unisex",
+    "sizes": ["One Size"],
+    "desc": "Gorra blanca clean con logo bordado sutil. Versatile para cualquier estación. Ajuste flexible.",
+    "images": ["../fotos_store/g4.jpg"]
+  },
+  {
+    "id": 5,
+    "name": "Subsonic Hoodie — Neon Nights",
+    "price": 69,
+    "category": "Nuevo",
+    "gender": "Unisex",
+    "sizes": ["XS","S","M","L","XL"],
+    "desc": "Sudadera premium con detalles neón bordados. Tejido suave con capucha cómoda y bolsillos laterales. Festival edition.",
+    "images": ["../fotos_store/s1.jpg"]
+  },
+  {
+    "id": 6,
+    "name": "Subsonic Tee — Electric Dawn",
+    "price": 29,
+    "category": "Nuevo",
+    "gender": "Hombre",
+    "sizes": ["S","M","L","XL"],
+    "desc": "Camiseta de algodón 100% con impresión frontal degradada. Corte clásico con acabado sostenible.",
+    "images": ["../fotos_store/s2.jpg"]
+  },
+  {
+    "id": 7,
+    "name": "Subsonic Hoodie — Mystic Vibes",
+    "price": 65,
+    "category": "Nuevo",
+    "gender": "Mujer",
+    "sizes": ["XS","S","M","L"],
+    "desc": "Sudadera ajustada con estampado místico full print. Capucha con cordones pulsera. Material premium stretchy.",
+    "images": ["../fotos_store/s3.jpg"]
+  },
+  {
+    "id": 8,
+    "name": "Subsonic Tee — Sonic Waves",
+    "price": 25,
+    "category": "Nuevo",
+    "gender": "Unisex",
+    "sizes": ["S","M","L","XL"],
+    "desc": "Camiseta oversize con patrón técnico wavefront. Tejido orgánico transpirable para clima cálido.",
+    "images": ["../fotos_store/s4.jpg"]
+  },
+  {
+    "id": 9,
+    "name": "Subsonic Hoodie — Purple Daze",
+    "price": 69,
+    "category": "Nuevo",
+    "gender": "Unisex",
+    "sizes": ["XS","S","M","L","XL"],
+    "desc": "Sudadera con capucha y estampado degradado púrpura. Bolsillos kangaroo amplios. Cordones reflectantes.",
+    "images": ["../fotos_store/s5.jpg"]
+  },
+  {
+    "id": 10,
+    "name": "Subsonic Tee — Neon Dreams",
+    "price": 29,
+    "category": "Nuevo",
+    "gender": "Mujer",
+    "sizes": ["XS","S","M","L"],
+    "desc": "Camiseta ajustada mujer con diseño neon exclusivo. Corte femenino con ribete de contraste.",
+    "images": ["../fotos_store/s6.jpg"]
+  }
+]

@@ -6,19 +6,7 @@
   <title>Subsonic — Store</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
-<body data-page="store">
-
-<script>
-  // Force reset products cache on store load
-  try {
-    const stored = localStorage.getItem('subsonic_db');
-    if(stored) {
-      const data = JSON.parse(stored);
-      // Keep only tickets, cart, orders - reset products to defaults
-      localStorage.removeItem('subsonic_db');
-    }
-  } catch(e) {}
-</script>
+<body data-page="store-new">
 
 <header>
   <div class="nav">
@@ -45,10 +33,13 @@
 
   <div class="hr"></div>
 
-  <section id="productGrid" class="grid grid-3"></section>
+  <section id="productGrid" class="store-grid"></section>
 </main>
 
+<!-- Load old scripts first to provide global functions -->
 <script src="../js/data.js"></script>
 <script src="../js/app.js"></script>
+<!-- Load new module that uses the global functions -->
+<script type="module" src="../js/store-loader.js"></script>
 </body>
 </html>
