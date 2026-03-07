@@ -228,3 +228,37 @@ export const getProductById = async (productId) => {
   }
 };
 
+/**
+ * Fetches a single artist by their ID.
+ * @param {number} artistId The ID of the artist to fetch.
+ * @returns {Promise<Object>} A promise that resolves to the artist object.
+ */
+export const getArtistById = async (artistId) => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log(`Using mock backend for artist ${artistId}.`);
+    await simulateLatency();
+    
+    const artists = await getAllArtists(); // Reuse existing function
+    const artist = artists.find(a => a.id === artistId);
+
+    if (!artist) {
+      throw new Error(`Artist with ID ${artistId} not found in mock data.`);
+    }
+    return artist;
+  } else {
+    console.log(`Using real backend for artist ${artistId}.`);
+    const url = `${config.API_BASE_URL}/artists/${artistId}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const artist = await response.json();
+      return artist;
+    } catch (error) {
+      console.error(`Failed to fetch artist ${artistId} from real API:`, error);
+      throw error;
+    }
+  }
+};
+
