@@ -101,3 +101,34 @@ export const getEventWithArtists = async (eventId) => {
   }
 };
 
+/**
+ * Fetches all artists.
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of all artists.
+ */
+export const getAllArtists = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log("Using mock backend for all artists.");
+    await simulateLatency();
+    const response = await fetch(config.MOCK_DATA_PATHS.artists);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const artists = await response.json();
+    return artists;
+  } else {
+    console.log("Using real backend for all artists.");
+    const url = `${config.API_BASE_URL}/artists`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const artists = await response.json();
+      return artists;
+    } catch (error) {
+      console.error("Failed to fetch all artists from real API:", error);
+      throw error;
+    }
+  }
+};
+
