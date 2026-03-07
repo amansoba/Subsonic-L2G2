@@ -163,3 +163,34 @@ export const getAllProducts = async () => {
   }
 };
 
+/**
+ * Fetches all experiences.
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of all experiences.
+ */
+export const getExperiences = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log("Using mock backend for all experiences.");
+    await simulateLatency();
+    const response = await fetch(config.MOCK_DATA_PATHS.experiences);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const experiences = await response.json();
+    return experiences;
+  } else {
+    console.log("Using real backend for all experiences.");
+    const url = `${config.API_BASE_URL}/experiences`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const experiences = await response.json();
+      return experiences;
+    } catch (error) {
+      console.error("Failed to fetch all experiences from real API:", error);
+      throw error;
+    }
+  }
+};
+

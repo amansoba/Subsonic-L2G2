@@ -1,0 +1,88 @@
+[
+  {
+    "id": "vr",
+    "title": "Immersive VR Experience",
+    "badge": "Estrella",
+    "description": "Sumérgete en realidad virtual y aumentada en los reinos míticos de Subsonic. Recorre escenarios épicos, explora la historia del festival y experimenta mundos fantásticos en espacios inmersivos de cientos de metros cuadrados.",
+    "features": [
+      "✦ Realidad Virtual 360°",
+      "✦ Realidad Aumentada interactiva",
+      "✦ Zonas de libre movimiento",
+      "✦ Historias narrativas del lore Subsonic"
+    ],
+    "link": "./html/experience_vr.html",
+    "linkLabel": "Explorar",
+    "featured": true
+  },
+  {
+    "id": "global",
+    "title": "Ediciones Globales",
+    "badge": "Viaje",
+    "description": "Vive Subsonic alrededor del mundo. Desde nuestras ediciones principales en España hasta eventos exclusivos en diferentes continentes, extiende tu experiencia Subsonic.",
+    "features": [
+      "✦ Subsonic Winter (Alpes)",
+      "✦ Subsonic Brasil",
+      "✦ Subsonic Asia",
+      "✦ CORE & Terra Solis Events"
+    ],
+    "link": "../events/events.html",
+    "linkLabel": "Ver Eventos"
+  },
+  {
+    "id": "narrative",
+    "title": "Narrativa y Temática",
+    "badge": "Historia",
+    "description": "Descubre el universo de Subsonic. Conoce el 'Libro de la Sabiduría', la historia de Planaxis, y los secretos detrás de cada escenario. Una narrativa envolvente que define cada edición.",
+    "features": [
+      "✦ Book of Wisdom",
+      "✦ Story of Planaxis",
+      "✦ Creación de escenarios",
+      "✦ Misiones temáticas"
+    ],
+    "link": "./html/experience_story.html",
+    "linkLabel": "Leer Historia"
+  },
+  {
+    "id": "hospitality",
+    "title": "Hospitality & Exclusividad",
+    "badge": "Premium",
+    "description": "Paquetes VIP exclusivos con acceso prioritario, mesas privadas, vistas privilegiadas del Mainstage desde nuestros lounges temáticos y hospedaje de lujo.",
+    "features": [
+      "✦ Lounge Rose (Elegancia)",
+      "✦ Lounge Lotus (Serenidad)",
+      "✦ Lounge Orchid (Lujo)",
+      "✦ Paquetes all-inclusive"
+    ],
+    "link": "./html/experience_vip.html",
+    "linkLabel": "Reservar VIP",
+    "premium": true
+  },
+  {
+    "id": "academy",
+    "title": "Academia Subsonic",
+    "badge": "Educación",
+    "description": "Aprende de los mejores productores y DJs del mundo. Masterclasses, talleres de producción, sesiones de mezcla y networking con la élite de la música electrónica.",
+    "features": [
+      "✦ DJ Academy",
+      "✦ Producción Electrónica",
+      "✦ Masterclasses",
+      "✦ Mentoría Personalizada"
+    ],
+    "link": "./html/experience_academy.html",
+    "linkLabel": "Inscribirse"
+  },
+  {
+    "id": "culinary",
+    "title": "Experiencias Gastronómicas",
+    "badge": "Gastronomía",
+    "description": "Viajes culinarios únicos con chefs de renombre mundial. Festejos temáticos, degustaciones exclusivas y experiencias gastronómicas que complementan el viaje sensorial de Subsonic.",
+    "features": [
+      "✦ Cenas temáticas",
+      "✦ Chefs reconocidos",
+      "✦ Maridajes exclusivos",
+      "✦ Experiencias pop-up"
+    ],
+    "link": "./html/experience_gastro.html",
+    "linkLabel": "Descubrir"
+  }
+]

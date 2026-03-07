@@ -4,6 +4,7 @@ export const config = {
   MOCK_DATA_PATHS: {
     events: '../mocks/events.json',
     artists: '../mocks/artists.json',
-    products: '../mocks/products.json'
+    products: '../mocks/products.json',
+    experiences: '../mocks/experiences.json'
   }
 };
