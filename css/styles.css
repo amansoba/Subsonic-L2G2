@@ -2973,4 +2973,91 @@ body[data-page="login"] {
   .dropdown-content a {
     padding: 8px 0;
   }
+}/* =========================================================
+   Events Carousel (Home Page)
+   ========================================================= */
+
+.events-carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 48px auto 0;
+  padding: 0 40px; /* Space for the arrows */
+}
+
+.events-carousel-viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+#events-list.heroTL-events {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 24px;
+  width: max-content; /* Allow it to be wider than the viewport */
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#events-list.heroTL-events > .eventTL {
+  width: 350px; /* Fixed width for each event card */
+  flex-shrink: 0; /* Prevent cards from shrinking */
+}
+
+#events-list.heroTL-events > .heroTL-divider {
+  display: none; /* Hide the dividers in carousel mode */
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: translateY(-50%);
+}
+
+.carousel-btn.prev {
+  left: -10px;
+}
+
+.carousel-btn.next {
+  right: -10px;
+}
+
+/* Responsive adjustments for the carousel */
+@media (max-width: 980px) {
+  .events-carousel-container {
+    padding: 0 10px; /* Less space on mobile */
+  }
+  .carousel-btn.prev {
+    left: -5px;
+  }
+  .carousel-btn.next {
+    right: -5px;
+  }
+  #events-list.heroTL-events > .eventTL {
+    width: 300px; /* Slightly smaller cards on mobile */
+  }
 }
