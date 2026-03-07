@@ -6,7 +6,7 @@
   <title>Subsonic Valencia — 2026</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
-<body data-page="festival-valencia">
+<body data-page="festival-valencia" data-event-id="2">
 
 <header>
   <div class="nav">
@@ -115,45 +115,8 @@
       <h2 class="h-title">Artistas Confirmados</h2>
       <p style="color: rgba(255,255,255,0.7); margin-top: 8px;">Selección de headliners. Próximamente completaremos la lista con 180+ artistas.</p>
       
-      <div style="margin-top: 24px;">
-        <div class="lineup-day">
-            <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            VIERNES 14 AGOSTO
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">David Guetta</span><span class="artist-stage">EDM</span></div>
-            <div class="artist-card"><span class="artist-name">Zoo</span><span class="artist-stage">Rap/Ska</span></div>
-            <div class="artist-card"><span class="artist-name">Love of Lesbian</span><span class="artist-stage">Indie Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Calvin Harris</span><span class="artist-stage">Dance</span></div>
-            <div class="artist-card"><span class="artist-name">La Fúmiga</span><span class="artist-stage">Pop/Viento</span></div>
-          </div>
-        </div>
-
-        <div class="lineup-day" style="margin-top: 20px;">
-            <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            SÁBADO 15 AGOSTO
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">Dorian</span><span class="artist-stage">Indie Electrónico</span></div>
-            <div class="artist-card"><span class="artist-name">Izal</span><span class="artist-stage">Indie Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Charlotte de Witte</span><span class="artist-stage">Techno</span></div>
-            <div class="artist-card"><span class="artist-name">Ginebras</span><span class="artist-stage">Indie Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Maza</span><span class="artist-stage">Urbano</span></div>
-          </div>
-        </div>
-
-        <div class="lineup-day" style="margin-top: 20px;">
-            <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            DOMINGO 16 AGOSTO
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">La Casa Azul</span><span class="artist-stage">Electropop</span></div>
-            <div class="artist-card"><span class="artist-name">Bizarrap</span><span class="artist-stage">Urbano/Producer</span></div>
-            <div class="artist-card"><span class="artist-name">Peggy Gou</span><span class="artist-stage">Techno</span></div>
-            <div class="artist-card"><span class="artist-name">Los Planetas</span><span class="artist-stage">Indie</span></div>
-            <div class="artist-card"><span class="artist-name">Sandra Monfort</span><span class="artist-stage">Folclore Moderno</span></div>
-          </div>
-        </div>
+      <div id="lineup-container" style="margin-top: 24px;">
+        <!-- Artist lineup will be loaded dynamically here -->
       </div>
 
       <div style="text-align: center; margin-top: 28px; padding: 20px; background: rgba(37,211,238,0.08); border-radius: 14px; border: 1px solid rgba(37,211,238,0.2);">
@@ -301,7 +264,6 @@ ación, reembolsos y más.
 
 
 
-<script src="../js/data.js"></script>
 <script src="../js/app.js"></script>
 <!-- ====== ARTIST MODAL / PLAYER ====== -->
 <div id="artistModal" class="artist-modal" aria-hidden="true" role="dialog" aria-labelledby="artistModalTitle">
@@ -381,5 +343,6 @@ ación, reembolsos y más.
 </div>
 
 <script src="../js/player-modal.js"></script>
+<script type="module" src="../js/festival-loader.js"></script>
 </body>
 </html>

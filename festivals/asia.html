@@ -6,7 +6,7 @@
   <title>Subsonic Asia — 2027</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
-<body data-page="festival-asia">
+<body data-page="festival-asia" data-event-id="4">
 
 <header>
   <div class="nav">
@@ -122,45 +122,8 @@
       <h2 class="h-title">Artistas Confirmados</h2>
       <p style="color: rgba(255,255,255,0.7); margin-top: 8px;">Selección de headliners globales. Próximamente completaremos la lista con 100+ artistas de todo el mundo.</p>
       
-      <div style="margin-top: 24px;">
-        <div class="lineup-day">
-          <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            DÍA 1 - HEADLINERS
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">BTS</span><span class="artist-stage">K-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">BLACKPINK</span><span class="artist-stage">K-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Peggy Gou</span><span class="artist-stage">Deep House</span></div>
-            <div class="artist-card"><span class="artist-name">Joji</span><span class="artist-stage">Alternative R&amp;B</span></div>
-            <div class="artist-card"><span class="artist-name">Rina Sawayama</span><span class="artist-stage">Art Pop</span></div>
-          </div>
-        </div>
-
-        <div class="lineup-day" style="margin-top: 20px;">
-            <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            DÍA 2 - ASIA STARS
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">NewJeans</span><span class="artist-stage">K-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Fujii Kaze</span><span class="artist-stage">J-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Higher Brothers</span><span class="artist-stage">Hip-hop</span></div>
-            <div class="artist-card"><span class="artist-name">Yoasobi</span><span class="artist-stage">J-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Stray Kids</span><span class="artist-stage">K-Pop</span></div>
-          </div>
-        </div>
-
-        <div class="lineup-day" style="margin-top: 20px;">
-            <h3 style="margin: 0 0 14px 0; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">
-            DÍA 3 - CLOSING & SPECIALS
-          </h3>
-          <div class="artists-grid">
-            <div class="artist-card"><span class="artist-name">Atarashii Gakko!</span><span class="artist-stage">Dance-Pop</span></div>
-            <div class="artist-card"><span class="artist-name">Beabadoobee</span><span class="artist-stage">Indie Rock</span></div>
-            <div class="artist-card"><span class="artist-name">ZHU</span><span class="artist-stage">Electrónica</span></div>
-            <div class="artist-card"><span class="artist-name">Yaeji</span><span class="artist-stage">House</span></div>
-            <div class="artist-card"><span class="artist-name">The Rose</span><span class="artist-stage">Indie Rock</span></div>
-          </div>
-        </div>
+      <div id="lineup-container" style="margin-top: 24px;">
+        <!-- Artist lineup will be loaded dynamically here -->
       </div>
 
       <div style="text-align: center; margin-top: 28px; padding: 20px; background: rgba(117,76,169,0.08); border-radius: 14px; border: 1px solid rgba(117,76,169,0.2);">
@@ -307,7 +270,6 @@ ación, reembolsos y más.
 </main>
 
 
-<script src="../js/data.js"></script>
 <script src="../js/app.js"></script>
 <!-- ====== ARTIST MODAL / PLAYER ====== -->
 <div id="artistModal" class="artist-modal" aria-hidden="true" role="dialog" aria-labelledby="artistModalTitle">
@@ -386,8 +348,8 @@ ación, reembolsos y más.
   </div>
 </div>
 
-<script src="../js/data.js"></script>
 <script src="../js/app.js"></script>
 <script src="../js/player-modal.js"></script>
+<script type="module" src="../js/festival-loader.js"></script>
 </body>
 </html>

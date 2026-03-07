@@ -48,3 +48,56 @@ export const getEvents = async () => {
 // You can add other API methods here following the same pattern
 // export const getArtists = async () => { ... };
 // export const getProducts = async () => { ... };
+
+/**
+ * Fetches a single event and its associated artists.
+ * @param {number} eventId The ID of the event to fetch.
+ * @returns {Promise<Object>} A promise that resolves to the event object with a `fullArtists` property.
+ */
+export const getEventWithArtists = async (eventId) => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log(`Using mock backend for event ${eventId} with artists.`);
+    await simulateLatency();
+
+    // Fetch both events and artists
+    const [eventsResponse, artistsResponse] = await Promise.all([
+      fetch(config.MOCK_DATA_PATHS.events),
+      fetch(config.MOCK_DATA_PATHS.artists)
+    ]);
+
+    if (!eventsResponse.ok || !artistsResponse.ok) {
+      throw new Error('Failed to fetch mock data.');
+    }
+
+    const events = await eventsResponse.json();
+    const artists = await artistsResponse.json();
+
+    // Find the specific event
+    const event = events.find(e => e.id === eventId);
+    if (!event) {
+      throw new Error(`Event with ID ${eventId} not found in mock data.`);
+    }
+
+    // Map artist IDs to full artist objects
+    const artistIdMap = new Map(artists.map(a => [a.id, a]));
+    event.fullArtists = event.artists.map(id => artistIdMap.get(id)).filter(Boolean);
+
+    return event;
+  } else {
+    console.log(`Using real backend for event ${eventId} with artists.`);
+    // Theoretical endpoint to get an event with its artists embedded
+    const url = `${config.API_BASE_URL}/events/${eventId}?_embed=artists`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const event = await response.json();
+      return event; // Assuming the backend returns artists embedded
+    } catch (error) {
+      console.error(`Failed to fetch event ${eventId} from real API:`, error);
+      throw error;
+    }
+  }
+};
+
