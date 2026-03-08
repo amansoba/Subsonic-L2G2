@@ -20,7 +20,7 @@ const simulateLatency = (min = 800, max = 1500) => {
 export const getEvents = async () => {
   if (config.USE_MOCK_BACKEND) {
     console.log("Using mock backend for events.");
-    await simulateLatency();
+    
     const response = await fetch(config.MOCK_DATA_PATHS.events);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -57,7 +57,7 @@ export const getEvents = async () => {
 export const getEventWithArtists = async (eventId) => {
   if (config.USE_MOCK_BACKEND) {
     console.log(`Using mock backend for event ${eventId} with artists.`);
-    await simulateLatency();
+    
 
     // Fetch both events and artists
     const [eventsResponse, artistsResponse] = await Promise.all([
@@ -108,7 +108,7 @@ export const getEventWithArtists = async (eventId) => {
 export const getAllArtists = async () => {
   if (config.USE_MOCK_BACKEND) {
     console.log("Using mock backend for all artists.");
-    await simulateLatency();
+    
     const response = await fetch(config.MOCK_DATA_PATHS.artists);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -139,7 +139,7 @@ export const getAllArtists = async () => {
 export const getAllProducts = async () => {
   if (config.USE_MOCK_BACKEND) {
     console.log("Using mock backend for all products.");
-    await simulateLatency();
+    
     const response = await fetch(config.MOCK_DATA_PATHS.products);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -170,7 +170,7 @@ export const getAllProducts = async () => {
 export const getSpaces = async () => {
   if (config.USE_MOCK_BACKEND) {
     console.log("Using mock backend for all spaces.");
-    await simulateLatency();
+    
     const response = await fetch(config.MOCK_DATA_PATHS.spaces);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -195,13 +195,47 @@ export const getSpaces = async () => {
 };
 
 /**
+ * Fetches a single space by its ID.
+ * @param {number} spaceId The ID of the space to fetch.
+ * @returns {Promise<Object>} A promise that resolves to the space object.
+ */
+export const getSpaceById = async (spaceId) => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log(`Using mock backend for space ${spaceId}.`);
+    
+    
+    const spaces = await getSpaces(); // Reuse existing function
+    const space = spaces.find(s => s.id === spaceId);
+
+    if (!space) {
+      throw new Error(`Space with ID ${spaceId} not found in mock data.`);
+    }
+    return space;
+  } else {
+    console.log(`Using real backend for space ${spaceId}.`);
+    const url = `${config.API_BASE_URL}/spaces/${spaceId}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const space = await response.json();
+      return space;
+    } catch (error) {
+      console.error(`Failed to fetch space ${spaceId} from real API:`, error);
+      throw error;
+    }
+  }
+};
+
+/**
  * Fetches all experiences.
  * @returns {Promise<Array<Object>>} A promise that resolves to the list of all experiences.
  */
 export const getExperiences = async () => {
   if (config.USE_MOCK_BACKEND) {
     console.log("Using mock backend for all experiences.");
-    await simulateLatency();
+    
     const response = await fetch(config.MOCK_DATA_PATHS.experiences);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -233,7 +267,7 @@ export const getExperiences = async () => {
 export const getProductById = async (productId) => {
   if (config.USE_MOCK_BACKEND) {
     console.log(`Using mock backend for product ${productId}.`);
-    await simulateLatency();
+    
     
     const products = await getAllProducts(); // Reuse existing function
     const product = products.find(p => p.id === productId);
@@ -267,7 +301,7 @@ export const getProductById = async (productId) => {
 export const getArtistById = async (artistId) => {
   if (config.USE_MOCK_BACKEND) {
     console.log(`Using mock backend for artist ${artistId}.`);
-    await simulateLatency();
+    
     
     const artists = await getAllArtists(); // Reuse existing function
     const artist = artists.find(a => a.id === artistId);
@@ -294,6 +328,37 @@ export const getArtistById = async (artistId) => {
 };
 
 /**
+ * Fetches all users.
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of all users.
+ */
+export const getAllUsers = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log("Using mock backend for all users.");
+    
+    const response = await fetch(config.MOCK_DATA_PATHS.users);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const users = await response.json();
+    return users;
+  } else {
+    console.log("Using real backend for all users.");
+    const url = `${config.API_BASE_URL}/users`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const users = await response.json();
+      return users;
+    } catch (error) {
+      console.error("Failed to fetch all users from real API:", error);
+      throw error;
+    }
+  }
+};
+
+/**
  * Fetches a user profile by their ID.
  * @param {number} userId The ID of the user to fetch.
  * @returns {Promise<Object>} A promise that resolves to the user object.
@@ -301,7 +366,7 @@ export const getArtistById = async (artistId) => {
 export const getUserProfile = async (userId) => {
   if (config.USE_MOCK_BACKEND) {
     console.log(`Using mock backend for user ${userId}.`);
-    await simulateLatency();
+    
     
     const response = await fetch(config.MOCK_DATA_PATHS.users);
     if (!response.ok) {

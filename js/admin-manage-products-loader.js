@@ -15,7 +15,7 @@ const renderProducts = (products) => {
             <h4 class="h-title">${product.name}</h4>
             <p class="small">Precio: €${product.price}</p>
             <div class="right" style="margin-top: 1rem;">
-                <button class="btn secondary" onclick="alert('Editar producto ID: ${product.id} (simulado)')">Editar</button>
+                <a href="edit-product.html?id=${product.id}" class="btn secondary">Editar</a>
                 <button class="btn danger" onclick="alert('Eliminar producto ID: ${product.id} (simulado)')">Eliminar</button>
             </div>
         </div>

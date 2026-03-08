@@ -18,7 +18,7 @@ const renderSpaces = (spaces) => {
             <p class="small">Evento ID: ${space.eventId} | Tamaño: ${space.size} | Precio: €${space.pricePerDay}/día</p>
             <p class="small">Servicios: ${space.services}</p>
             <div class="right" style="margin-top: 1rem;">
-                <button class="btn secondary" onclick="alert('Editar espacio ID: ${space.id} (simulado)')">Editar</button>
+                <a href="edit-space.html?id=${space.id}" class="btn secondary">Editar</a>
                 <button class="btn danger" onclick="alert('Eliminar espacio ID: ${space.id} (simulado)')">Eliminar</button>
             </div>
         </div>

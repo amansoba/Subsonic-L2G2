@@ -62,7 +62,7 @@ function renderNav(){
       { href: `${basePath}admin/edit-event.html`, label: "Eventos" },
       { href: `${basePath}admin/manage-products.html`, label: "Tienda" },
       { href: `${basePath}admin/manage-spaces.html`, label: "Espacios" },
-      { href: "#", label: `${s.name || "Admin"}`, action: "noop" },
+      { href: `${basePath}admin/manage-users.html`, label: "Usuarios" },
       { href: "#", label: "Cerrar sesión", action: "logout" }
     ];
   } else {
