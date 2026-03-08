@@ -52,7 +52,6 @@ El proyecto está desarrollado en **JavaScript puro**, sin dependencias de frame
 El repositorio está organizado en carpetas que separan las distintas vistas y recursos de la aplicación:
 
 ```
-c:\Users\amanb\Desktop\Informática\PI\Subsonic\
 ├───index.html
 ├───README.md
 ├───.git\
