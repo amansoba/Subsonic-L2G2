@@ -6,6 +6,7 @@ export const config = {
     artists: '../mocks/artists.json',
     products: '../mocks/products.json',
     experiences: '../mocks/experiences.json',
-    users: '../mocks/users.json'
+    users: '../mocks/users.json',
+    spaces: '../mocks/spaces.json'
   }
 };

@@ -54,34 +54,40 @@ function renderNav(){
   if(!nav) return;
 
   const s = getSession();
-  const links = [
-    { href: `${basePath}events/events.html`, label: "Eventos" },
-    { href: `${basePath}store/store.html`, label: "Tienda" },
-    { href: `${basePath}help/help.html`, label: "Ayuda" },
-  ];
+  let links = [];
 
-  // Badge carrito (si existe localStorage store)
-  const cartCount = (window.store?.loadCart?.() || []).reduce((a,i)=>a+(i.qty||0),0);
-  // mark cart link so we can animate it later
-  links.push({ href: `${basePath}store/cart.html`, label: `Carrito (${cartCount})`, id: "navCartLink" });
+  if (s && s.role === 'admin') {
+    // Admin-specific navigation
+    links = [
+      { href: `${basePath}admin/edit-event.html`, label: "Eventos" },
+      { href: `${basePath}admin/manage-products.html`, label: "Tienda" },
+      { href: `${basePath}admin/manage-spaces.html`, label: "Espacios" },
+      { href: "#", label: `${s.name || "Admin"}`, action: "noop" },
+      { href: "#", label: "Cerrar sesión", action: "logout" }
+    ];
+  } else {
+    // Default navigation for public and other roles
+    links = [
+      { href: `${basePath}events/events.html`, label: "Eventos" },
+      { href: `${basePath}store/store.html`, label: "Tienda" },
+      { href: `${basePath}help/help.html`, label: "Ayuda" },
+    ];
+    const cartCount = (window.store?.loadCart?.() || []).reduce((a,i)=>a+(i.qty||0),0);
+    links.push({ href: `${basePath}store/cart.html`, label: `Carrito (${cartCount})`, id: "navCartLink" });
 
-  if(!s){
-    links.push({ href:`${basePath}auth/login.html`, label:"Mi cuenta" });
-  } else if(s.role === "client"){
-    // páginas de cliente
-    links.push({ href:`${basePath}client/dashboard.html`, label:"Mi Cuenta" });
-    links.push({ href:`${basePath}client/tickets.html`, label:"Mis Entradas" });
-    links.push({ href:`${basePath}client/orders.html`, label:"Mis Pedidos" });
-    links.push({ href:"#", label: `${s.name || "Cliente"}`, action:"noop" });
-    links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
-  } else if(s.role === "provider"){
-    links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Espacios" });
-    links.push({ href:"#", label: `${s.name || "Proveedor"}`, action:"noop" });
-    links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
-  } else if(s.role === "admin"){
-    links.push({ href:`${basePath}admin/edit-event.html`, label:"Admin" });
-    links.push({ href:"#", label: `${s.name || "Admin"}`, action:"noop" });
-    links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
+    if(!s){
+      links.push({ href:`${basePath}auth/login.html`, label:"Mi cuenta" });
+    } else if(s.role === "client"){
+      links.push({ href:`${basePath}client/dashboard.html`, label:"Mi Cuenta" });
+      links.push({ href:`${basePath}client/tickets.html`, label:"Mis Entradas" });
+      links.push({ href:`${basePath}client/orders.html`, label:"Mis Pedidos" });
+      links.push({ href:"#", label: `${s.name || "Cliente"}`, action:"noop" });
+      links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
+    } else if(s.role === "provider"){
+      links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Espacios" });
+      links.push({ href:"#", label: `${s.name || "Proveedor"}`, action:"noop" });
+      links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
+    }
   }
 
   nav.innerHTML = "";

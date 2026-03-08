@@ -164,6 +164,37 @@ export const getAllProducts = async () => {
 };
 
 /**
+ * Fetches all spaces.
+ * @returns {Promise<Array<Object>>} A promise that resolves to the list of all spaces.
+ */
+export const getSpaces = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    console.log("Using mock backend for all spaces.");
+    await simulateLatency();
+    const response = await fetch(config.MOCK_DATA_PATHS.spaces);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const spaces = await response.json();
+    return spaces;
+  } else {
+    console.log("Using real backend for all spaces.");
+    const url = `${config.API_BASE_URL}/spaces`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const spaces = await response.json();
+      return spaces;
+    } catch (error) {
+      console.error("Failed to fetch all spaces from real API:", error);
+      throw error;
+    }
+  }
+};
+
+/**
  * Fetches all experiences.
  * @returns {Promise<Array<Object>>} A promise that resolves to the list of all experiences.
  */
