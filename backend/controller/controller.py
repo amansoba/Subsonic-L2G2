@@ -7,7 +7,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from controller.users_routes import router as users_router
+from app.routes.artists_routes import router as artists_router
+from app.routes.events_routes import router as events_router
+from app.routes.experiences_routes import router as experiences_router
+from app.routes.orders_routes import router as orders_router
+from app.routes.products_routes import router as products_router
+from app.routes.spaces_routes import router as spaces_router
+from app.routes.tickets_routes import router as tickets_router
+from app.routes.users_routes import router as users_router
 
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 TEMPLATES_DIR = BACKEND_DIR / "view" / "templates"
@@ -30,6 +37,13 @@ app.add_middleware(
 )
 
 app.include_router(users_router)
+app.include_router(events_router)
+app.include_router(artists_router)
+app.include_router(products_router)
+app.include_router(spaces_router)
+app.include_router(experiences_router)
+app.include_router(tickets_router)
+app.include_router(orders_router)
 
 # Static mounts to keep original frontend URLs working
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
