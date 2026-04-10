@@ -1,35 +1,42 @@
 from __future__ import annotations
 
-from typing import Optional
+from fastapi import Depends, HTTPException, Request, status
 
-from fastapi import Cookie, Depends, HTTPException, status
-
+from app.dao.user_dao import verify_firebase_token
 from app.factory.dao_factory import factory
-from app.models.user import Session, User
+from app.models.user import User
 
 
-def get_session(session: Optional[str] = Cookie(default=None)) -> Session:
-    if not session:
+def _extract_bearer(request: Request) -> str:
+    """Return the raw token from ``Authorization: Bearer <token>``."""
+    auth = request.headers.get("Authorization", "")
+    if not auth.startswith("Bearer "):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing session cookie",
+            detail="Missing or invalid Authorization header",
         )
-    s = factory.sessions.get(session)
-    if not s:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired session",
-        )
-    return s
+    return auth[7:]
 
 
-def get_current_user(s: Session = Depends(get_session)) -> User:
-    user = factory.users.get_by_id(s.user_id)
-    if not user:
+def get_current_user(request: Request) -> User:
+    """Verify the Bearer token and return the corresponding ``User``.
+
+    On the first request for a given Firebase UID the user is created via
+    ``upsert_from_identity``.
+    """
+    token = _extract_bearer(request)
+    try:
+        claims = verify_firebase_token(token)
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found",
+            detail="Invalid or expired token",
         )
+    user = factory.users.upsert_from_identity(
+        firebase_uid=claims["uid"],
+        email=claims["email"],
+        full_name=claims.get("name"),
+    )
     return user
 
 

@@ -1,0 +1,18 @@
+# Python / venv
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Firebase credentials — NEVER commit these
+*serviceAccountKey*.json
+firebase-credentials*.json
+*firebase-adminsdk*.json
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/

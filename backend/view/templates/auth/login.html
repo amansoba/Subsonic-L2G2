@@ -19,7 +19,7 @@
 
       <!-- Título -->
       <h1 class="loginTitle">Iniciar sesión</h1>
-      <p class="loginSubtitle">Autenticación simulada. Elige el rol para navegar por sus vistas.</p>
+      <p class="loginSubtitle">Inicia sesión con tu cuenta de Subsonic o con Google.</p>
 
       <!-- Formulario -->
       <form id="loginForm">
@@ -33,16 +33,13 @@
           <input id="password" type="password" required placeholder="********" />
         </div>
 
-        <div class="field">
-          <label for="role">Rol</label>
-          <select id="role">
-            <option value="client">Cliente</option>
-            <option value="provider">Proveedor</option>
-            <option value="admin">Administrador</option>
-          </select>
-        </div>
-
         <button class="btn loginBtn" type="submit">Entrar</button>
+
+        <div style="text-align:center;margin:12px 0">
+          <button id="googleSignIn" class="btn secondary" type="button" style="width:100%">
+            Iniciar sesión con Google
+          </button>
+        </div>
 
         <div class="loginLinks">
           <a href="forgot-password.html">¿Has olvidado tu contraseña?</a>
@@ -61,7 +58,10 @@
   </div>
 </div>
 
+<!-- Firebase JS SDK (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+
 <script src="../js/data.js"></script>
 <script src="../js/app.js"></script>
-</body>
-</html>

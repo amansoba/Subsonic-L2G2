@@ -98,9 +98,12 @@ function renderNav(){
 
     if(l.action === "logout"){
       a.href = "#";
-      a.addEventListener("click",(e)=>{
+      a.addEventListener("click", async (e)=>{
         e.preventDefault();
         clearSession();
+        if (_firebaseInitialised()) {
+          try { await firebase.auth().signOut(); } catch(_) {}
+        }
         window.location.href = basePath + "index.html";
       });
     }
@@ -304,6 +307,36 @@ function pageArtistDetail(){
   back.href = eventId ? `${basePath}events/event.html?id=${eventId}` : `${basePath}events/events.html`;
 }
 
+/* -------------------- Firebase Auth helpers -------------------- */
+function _firebaseInitialised() {
+  return typeof firebase !== 'undefined' && firebase.auth;
+}
+
+/** After successful Firebase sign-in, fetch the user profile from the backend
+ *  and store it in localStorage for role-based navigation. */
+async function _onFirebaseLogin(firebaseUser) {
+  const token = await firebaseUser.getIdToken();
+  try {
+    const res = await fetch(
+      (window.__SUBSONIC_API || 'http://localhost:8000/api') + '/login',
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id_token: token }) }
+    );
+    if (!res.ok) throw new Error('login failed');
+    const profile = await res.json();
+    setSession({ email: profile.email, role: profile.role, name: profile.name || firebaseUser.displayName || profile.email.split('@')[0] });
+    return profile;
+  } catch (err) {
+    console.error('Subsonic login error', err);
+    return null;
+  }
+}
+
+function _redirectByRole(role) {
+  if (role === 'admin') window.location.href = basePath + 'admin/edit-event.html';
+  else if (role === 'provider') window.location.href = basePath + 'spaces/provider-spaces.html';
+  else window.location.href = basePath + 'client/dashboard.html';
+}
+
 function pageLogin(){
   renderNav();
 
@@ -312,37 +345,48 @@ function pageLogin(){
   if(!form || form.dataset.bound) return;
 
   form.dataset.bound = "1";
-  form.addEventListener("submit",(e)=>{
+
+  // Email/password login via Firebase
+  form.addEventListener("submit", async (e)=>{
     e.preventDefault();
 
     const email = ($("#email")?.value || "").trim();
-    const password = ($("#password")?.value || ""); // not used in simulation
-    const role = $("#role")?.value || "client";
-    const name = email ? email.split("@")[0] : (role === "client" ? "Cliente" : "Proveedor");
+    const password = ($("#password")?.value || "");
 
-    // password ignored but ensures field is present
-    setSession({ email, role, name });
-
-    if(toast){
-      toast.style.display = "block";
-      toast.textContent = "Sesión iniciada (simulada). Redirigiendo…";
+    if (!_firebaseInitialised()) {
+      // Fallback: fake auth for dev without Firebase SDK
+      const name = email.split("@")[0];
+      setSession({ email, role: "client", name });
+      if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada (sin Firebase). Redirigiendo…"; }
+      setTimeout(()=> _redirectByRole("client"), 450);
+      return;
     }
 
-    setTimeout(()=>{
-      // Redirect based on role
-      if(role === 'client') window.location.href = basePath + 'client/dashboard.html';
-      else if(role === 'provider') window.location.href = basePath + 'spaces/provider-spaces.html';
-      else if(role === 'admin') window.location.href = basePath + 'admin/edit-event.html';
-      else window.location.href = basePath + 'index.html';
-    }, 450);
+    try {
+      const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
+      if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada. Redirigiendo…"; }
+      const profile = await _onFirebaseLogin(cred.user);
+      setTimeout(()=> _redirectByRole(profile?.role || "client"), 450);
+    } catch(err) {
+      if(toast){ toast.style.display="block"; toast.textContent="Error: " + err.message; }
+    }
   });
 
-  // Link opcional a recuperar contraseña si existe un anchor con id
-  const fp = $("#forgotLink");
-  if(fp && !fp.dataset.bound){
-    fp.dataset.bound = "1";
-    fp.addEventListener("click",(e)=>{
-      // si tu login ya tiene href, no hace falta
+  // Google Sign-In button
+  const googleBtn = $("#googleSignIn");
+  if (googleBtn && !googleBtn.dataset.bound) {
+    googleBtn.dataset.bound = "1";
+    googleBtn.addEventListener("click", async () => {
+      if (!_firebaseInitialised()) return;
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const cred = await firebase.auth().signInWithPopup(provider);
+        if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada con Google. Redirigiendo…"; }
+        const profile = await _onFirebaseLogin(cred.user);
+        setTimeout(()=> _redirectByRole(profile?.role || "client"), 450);
+      } catch(err) {
+        if(toast){ toast.style.display="block"; toast.textContent="Error: " + err.message; }
+      }
     });
   }
 }
@@ -353,22 +397,47 @@ function pageRegister(){
   const form = $("#registerForm");
   if(!form || form.dataset.bound) return;
 
-  const roleReg = $("#roleReg");
-  const providerFields = $("#providerFields");
+  form.dataset.bound = "1";
 
-  if(roleReg && providerFields && !roleReg.dataset.bound){
-    roleReg.dataset.bound = "1";
-    roleReg.addEventListener("change",(e)=>{
-      providerFields.style.display = (e.target.value === "provider") ? "block" : "none";
+  // Email/password register via Firebase
+  form.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    const name = ($("#regName")?.value || "").trim();
+    const email = ($("#regEmail")?.value || "").trim();
+    const password = ($("#regPassword")?.value || "");
+
+    if (!_firebaseInitialised()) {
+      alert("Firebase no disponible. Registro no posible.");
+      return;
+    }
+
+    try {
+      const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      if (name) await cred.user.updateProfile({ displayName: name });
+      const profile = await _onFirebaseLogin(cred.user);
+      window.location.href = basePath + "client/dashboard.html";
+    } catch(err) {
+      alert("Error: " + err.message);
+    }
+  });
+
+  // Google Sign-Up button
+  const googleBtn = $("#googleSignUp");
+  if (googleBtn && !googleBtn.dataset.bound) {
+    googleBtn.dataset.bound = "1";
+    googleBtn.addEventListener("click", async () => {
+      if (!_firebaseInitialised()) return;
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        const cred = await firebase.auth().signInWithPopup(provider);
+        await _onFirebaseLogin(cred.user);
+        window.location.href = basePath + "client/dashboard.html";
+      } catch(err) {
+        alert("Error: " + err.message);
+      }
     });
   }
-
-  form.dataset.bound = "1";
-  form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    alert("Registro simulado. Ahora inicia sesión.");
-    window.location.href = basePath + "auth/login.html";
-  });
 }
 
 function pageClientDashboard(){

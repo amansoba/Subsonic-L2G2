@@ -12,8 +12,33 @@ from app.models.user import Session, User
 
 MOCKS_DIR = Path(__file__).resolve().parents[2] / "view" / "static" / "mocks"
 
+_USE_FAKE_AUTH = os.getenv("SUBSONIC_USE_FAKE_AUTH", "true").lower() == "true"
 
-def fake_verify_with_firebase(id_token: str) -> dict:
+
+def verify_firebase_token(id_token: str) -> dict:
+    """Verify a Firebase ID token.
+
+    When ``SUBSONIC_USE_FAKE_AUTH=true`` (the default) the token is parsed
+    using the legacy fake format ``uid:email:name`` so that development
+    without a real Firebase project keeps working.
+
+    When ``SUBSONIC_USE_FAKE_AUTH=false`` the token is verified against
+    Firebase Auth using ``firebase_admin``.
+    """
+    if _USE_FAKE_AUTH:
+        return _fake_verify(id_token)
+
+    from firebase_admin import auth  # type: ignore
+
+    decoded = auth.verify_id_token(id_token)
+    return {
+        "uid": decoded["uid"],
+        "email": decoded.get("email", ""),
+        "name": decoded.get("name"),
+    }
+
+
+def _fake_verify(id_token: str) -> dict:
     """Accept 'uid:email:name' tokens for testing, or the env demo token."""
     demo_token = os.getenv("SUBSONIC_DEMO_IDTOKEN", "demo-token")
     if id_token == demo_token:
@@ -26,6 +51,7 @@ def fake_verify_with_firebase(id_token: str) -> dict:
         "email": parts[1],
         "name": parts[2] if len(parts) > 2 else None,
     }
+
 
 
 class InMemoryUserDAO:

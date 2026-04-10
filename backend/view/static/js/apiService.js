@@ -1,6 +1,32 @@
 import { config } from './config.js';
 
 /**
+ * Returns the current Firebase ID token for Authorization header, or null.
+ * Uses the compat SDK (global ``firebase``).
+ */
+async function _getAuthHeaders() {
+  const headers = {};
+  if (typeof firebase !== 'undefined' && firebase.auth) {
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  return headers;
+}
+
+/**
+ * Wrapper around fetch that automatically injects the Authorization header
+ * when using the real backend. Accepts the same arguments as ``fetch()``.
+ */
+async function authFetch(url, options = {}) {
+  const authHeaders = await _getAuthHeaders();
+  options.headers = { ...(options.headers || {}), ...authHeaders };
+  return fetch(url, options);
+}
+
+/**
  * Simulates network latency.
  * @param {number} min - Minimum delay in milliseconds.
  * @param {number} max - Maximum delay in milliseconds.
@@ -31,7 +57,7 @@ export const getEvents = async () => {
     console.log("Using real backend for events.");
     const url = `${config.API_BASE_URL}/events`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         // Handle HTTP errors like 404, 500 etc.
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -88,7 +114,7 @@ export const getEventWithArtists = async (eventId) => {
     // Theoretical endpoint to get an event with its artists embedded
     const url = `${config.API_BASE_URL}/events/${eventId}?_embed=artists`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -119,7 +145,7 @@ export const getAllArtists = async () => {
     console.log("Using real backend for all artists.");
     const url = `${config.API_BASE_URL}/artists`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -150,7 +176,7 @@ export const getAllProducts = async () => {
     console.log("Using real backend for all products.");
     const url = `${config.API_BASE_URL}/products`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -181,7 +207,7 @@ export const getSpaces = async () => {
     console.log("Using real backend for all spaces.");
     const url = `${config.API_BASE_URL}/spaces`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -215,7 +241,7 @@ export const getSpaceById = async (spaceId) => {
     console.log(`Using real backend for space ${spaceId}.`);
     const url = `${config.API_BASE_URL}/spaces/${spaceId}`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -246,7 +272,7 @@ export const getExperiences = async () => {
     console.log("Using real backend for all experiences.");
     const url = `${config.API_BASE_URL}/experiences`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -280,7 +306,7 @@ export const getProductById = async (productId) => {
     console.log(`Using real backend for product ${productId}.`);
     const url = `${config.API_BASE_URL}/products/${productId}`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -314,7 +340,7 @@ export const getArtistById = async (artistId) => {
     console.log(`Using real backend for artist ${artistId}.`);
     const url = `${config.API_BASE_URL}/artists/${artistId}`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -345,7 +371,7 @@ export const getAllUsers = async () => {
     console.log("Using real backend for all users.");
     const url = `${config.API_BASE_URL}/users`;
     try {
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -384,7 +410,7 @@ export const getUserProfile = async (userId) => {
     const url = `${config.API_BASE_URL}/users/${userId}`;
     try {
       // Here you would also include authentication headers
-      const response = await fetch(url);
+      const response = await authFetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

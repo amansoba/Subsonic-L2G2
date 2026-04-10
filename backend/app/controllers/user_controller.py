@@ -2,27 +2,24 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from app.dao.user_dao import fake_verify_with_firebase
+from app.dao.user_dao import verify_firebase_token
 from app.factory.dao_factory import factory
-from app.models.user import Session, User
+from app.models.user import User
 
 
-def login(id_token: str) -> tuple[User, Session]:
-    claims = fake_verify_with_firebase(id_token)
+def login(id_token: str) -> User:
+    """Verify the Firebase ID token and upsert the user.
+
+    Returns the authenticated ``User``.  Session management is no longer
+    needed — every request carries its own Bearer token.
+    """
+    claims = verify_firebase_token(id_token)
     user = factory.users.upsert_from_identity(
         firebase_uid=claims["uid"],
         email=claims["email"],
         full_name=claims.get("name"),
     )
-    session = factory.sessions.create(user)
-    return user, session
-
-
-def get_current_user(session_id: str) -> Optional[User]:
-    session = factory.sessions.get(session_id)
-    if not session:
-        return None
-    return factory.users.get_by_id(session.user_id)
+    return user
 
 
 def get_all_users() -> List[User]:

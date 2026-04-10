@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import uuid
 from typing import List, Optional
 
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 
 from app.controllers import user_controller
-from app.factory.dao_factory import factory
 from app.routes.deps import get_current_user, require_admin
 from app.schemas.user_schema import UserRead, UserUpdate
 
@@ -16,12 +14,6 @@ router = APIRouter(prefix="/api", tags=["users"])
 
 class LoginRequest(BaseModel):
     id_token: str
-
-
-class RegisterRequest(BaseModel):
-    email: str
-    full_name: Optional[str] = None
-    password: str  # accepted but not stored (demo auth)
 
 
 def _user_to_read(user) -> UserRead:
@@ -35,55 +27,25 @@ def _user_to_read(user) -> UserRead:
 
 
 @router.post("/login", response_model=UserRead)
-def login(response: Response, payload: LoginRequest) -> UserRead:
+def login(payload: LoginRequest) -> UserRead:
+    """Verify the Firebase ID token and return the user profile.
+
+    The frontend is responsible for storing the Firebase token and sending
+    it as ``Authorization: Bearer <token>`` on subsequent requests.
+    """
     try:
-        user, session = user_controller.login(payload.id_token)
-    except ValueError:
+        user = user_controller.login(payload.id_token)
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid ID token",
         )
-    response.set_cookie(
-        key="session",
-        value=session.id,
-        httponly=True,
-        secure=False,
-        samesite="lax",
-    )
-    return _user_to_read(user)
-
-
-@router.post("/register", response_model=UserRead)
-def register(response: Response, payload: RegisterRequest) -> UserRead:
-    existing = factory.users.get_by_email(payload.email)
-    if existing:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered",
-        )
-    uid = f"reg-{uuid.uuid4().hex[:8]}"
-    user = factory.users.upsert_from_identity(
-        firebase_uid=uid,
-        email=payload.email,
-        full_name=payload.full_name,
-        default_role="client",
-    )
-    session = factory.sessions.create(user)
-    response.set_cookie(
-        key="session",
-        value=session.id,
-        httponly=True,
-        secure=False,
-        samesite="lax",
-    )
     return _user_to_read(user)
 
 
 @router.post("/logout", status_code=200)
-def logout(response: Response, session: Optional[str] = Cookie(default=None)):
-    if session:
-        factory.sessions.delete(session)
-    response.delete_cookie("session")
+def logout():
+    """No-op — stateless auth.  The frontend simply discards its token."""
     return {"message": "Logged out"}
 
 
