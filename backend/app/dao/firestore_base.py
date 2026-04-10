@@ -9,9 +9,12 @@
 from __future__ import annotations
 
 import dataclasses
+import logging
 from typing import Type, TypeVar
 
 from app.firebase_config import db
+
+logger = logging.getLogger("subsonic.firestore")
 
 T = TypeVar("T")
 
