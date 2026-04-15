@@ -15,6 +15,15 @@ MOCKS_DIR = Path(__file__).resolve().parents[2] / "view" / "static" / "mocks"
 _USE_FAKE_AUTH = os.getenv("SUBSONIC_USE_FAKE_AUTH", "true").lower() == "true"
 
 
+def _is_admin_email(email: str) -> bool:
+    """Return True if *email* is listed in SUBSONIC_ADMIN_EMAILS."""
+    raw = os.getenv("SUBSONIC_ADMIN_EMAILS", "")
+    if not raw.strip():
+        return False
+    admin_emails = [e.strip().lower() for e in raw.split(",") if e.strip()]
+    return email.strip().lower() in admin_emails
+
+
 def verify_firebase_token(id_token: str) -> dict:
     """Verify a Firebase ID token.
 
@@ -103,10 +112,14 @@ class InMemoryUserDAO:
         full_name: Optional[str],
         default_role: str = "client",
     ) -> User:
+        # Determine effective role: admin whitelist takes priority
+        effective_role = "admin" if _is_admin_email(email) else default_role
+
         existing = self.get_by_firebase_uid(firebase_uid)
         if existing:
             existing.email = email
             existing.full_name = full_name
+            existing.role = effective_role
             self._users_by_email[email] = existing
             return existing
         user = User(
@@ -114,7 +127,7 @@ class InMemoryUserDAO:
             firebase_uid=firebase_uid,
             email=email,
             full_name=full_name,
-            role=default_role,
+            role=effective_role,
             join_date=str(date.today()),
         )
         self._users_by_id[user.id] = user

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -88,6 +89,12 @@ def render_html_pages(full_path: str, request: Request):
     template_file = TEMPLATES_DIR / full_path
     if not template_file.exists():
         raise HTTPException(status_code=404, detail="Not Found")
+
+    # Guard admin views — only users with the "admin" role cookie may access
+    if full_path.startswith("admin/"):
+        role = request.cookies.get("subsonic_role", "")
+        if role != "admin":
+            return RedirectResponse(url="/auth/login.html", status_code=302)
 
     return templates.TemplateResponse(full_path, {"request": request})
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from pydantic import BaseModel
 
 from app.controllers import user_controller
@@ -27,7 +27,7 @@ def _user_to_read(user) -> UserRead:
 
 
 @router.post("/login", response_model=UserRead)
-def login(payload: LoginRequest) -> UserRead:
+def login(payload: LoginRequest, response: Response) -> UserRead:
     """Verify the Firebase ID token and return the user profile.
 
     The frontend is responsible for storing the Firebase token and sending
@@ -40,12 +40,21 @@ def login(payload: LoginRequest) -> UserRead:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid ID token",
         )
+    # Set a role cookie so the HTML page router can guard admin views
+    response.set_cookie(
+        key="subsonic_role",
+        value=user.role,
+        httponly=True,
+        samesite="lax",
+        max_age=60 * 60 * 24 * 7,  # 7 days
+    )
     return _user_to_read(user)
 
 
 @router.post("/logout", status_code=200)
-def logout():
-    """No-op — stateless auth.  The frontend simply discards its token."""
+def logout(response: Response):
+    """Clear the role cookie.  The frontend also discards its token."""
+    response.delete_cookie("subsonic_role")
     return {"message": "Logged out"}
 
 

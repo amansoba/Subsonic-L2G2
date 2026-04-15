@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import os
 from datetime import date
 from typing import List, Optional
 
@@ -11,6 +12,15 @@ from app.firebase_config import db
 from app.models.user import User
 
 log = logging.getLogger("subsonic.firestore.users")
+
+
+def _is_admin_email(email: str) -> bool:
+    """Return True if *email* is listed in SUBSONIC_ADMIN_EMAILS."""
+    raw = os.getenv("SUBSONIC_ADMIN_EMAILS", "")
+    if not raw.strip():
+        return False
+    admin_emails = [e.strip().lower() for e in raw.split(",") if e.strip()]
+    return email.strip().lower() in admin_emails
 
 
 class FirestoreUserDAO:
@@ -65,13 +75,18 @@ class FirestoreUserDAO:
         default_role: str = "client",
     ) -> User:
         log.info("UPSERT user firebase_uid=%s email=%s", firebase_uid, email)
+
+        # Determine effective role: admin whitelist takes priority
+        effective_role = "admin" if _is_admin_email(email) else default_role
+
         existing = self.get_by_firebase_uid(firebase_uid)
         if existing:
             log.info("  → updating existing user id=%s", existing.id)
             existing.email = email
             existing.full_name = full_name
+            existing.role = effective_role
             db.collection(self._collection).document(str(existing.id)).update(
-                {"email": email, "full_name": full_name}
+                {"email": email, "full_name": full_name, "role": effective_role}
             )
             return existing
 
@@ -81,13 +96,13 @@ class FirestoreUserDAO:
             firebase_uid=firebase_uid,
             email=email,
             full_name=full_name,
-            role=default_role,
+            role=effective_role,
             join_date=str(date.today()),
         )
         db.collection(self._collection).document(str(uid)).set(
             dataclass_to_dict(user)
         )
-        log.info("  → created new user id=%s role=%s", uid, default_role)
+        log.info("  → created new user id=%s role=%s", uid, effective_role)
         return user
 
     def update(self, user_id: int, **kwargs) -> Optional[User]:
