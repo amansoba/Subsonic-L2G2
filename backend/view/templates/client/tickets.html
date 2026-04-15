@@ -1,50 +1,53 @@
 <!doctype html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subsonic — Mis entradas</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
+
 <body data-page="tickets">
 
-<header>
-  <div class="nav">
-    <a class="brand" href="../index.html">
-      <img src="../fotos_principales/logo.jpg" alt="Subsonic Logo" class="brand-logo" /><span>Subsonic</span>
-    </a>
-    <nav class="navlinks" id="navlinks"></nav>
-  </div>
-</header>
-
-<main class="container">
-  <div class="card">
-    <h1 class="h-title" style="margin:0">Mis entradas</h1>
-    <p class="small">Listado de entradas compradas (simulado).</p>
-
-    <div class="hr"></div>
-
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Evento</th>
-          <th>Pase</th>
-          <th>Fecha compra</th>
-          <th>Estado</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="ticketsTableBody"></tbody>
-    </table>
-
-    <div class="right" style="margin-top:12px">
-      <a class="btn secondary" href="dashboard.html">Volver al panel</a>
+  <header>
+    <div class="nav">
+      <a class="brand" href="../index.html">
+        <img src="../fotos_principales/logo.jpg" alt="Subsonic Logo" class="brand-logo" /><span>Subsonic</span>
+      </a>
+      <nav class="navlinks" id="navlinks"></nav>
     </div>
-  </div>
-</main>
+  </header>
 
-<script src="../js/data.js"></script>
-<script src="../js/app.js"></script>
-<script type="module" src="../js/tickets-loader.js"></script>
+  <main class="container">
+    <div class="card">
+      <h1 class="h-title" style="margin:0">Mis entradas</h1>
+      <p class="small">Listado de entradas compradas.</p>
+
+      <div class="hr"></div>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Pase</th>
+            <th>Fecha compra</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="ticketsTableBody"></tbody>
+      </table>
+
+      <div class="right" style="margin-top:12px">
+        <a class="btn secondary" href="dashboard.html">Volver al panel</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/app.js"></script>
+  <script type="module" src="../js/tickets-loader.js"></script>
 </body>
+
 </html>
