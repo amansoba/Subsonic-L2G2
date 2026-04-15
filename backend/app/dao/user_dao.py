@@ -39,7 +39,7 @@ def verify_firebase_token(id_token: str) -> dict:
 
     from firebase_admin import auth  # type: ignore
 
-    decoded = auth.verify_id_token(id_token)
+    decoded = auth.verify_id_token(id_token, clock_skew_seconds=5)
     return {
         "uid": decoded["uid"],
         "email": decoded.get("email", ""),

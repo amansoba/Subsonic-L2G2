@@ -35,7 +35,9 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
     """
     try:
         user = user_controller.login(payload.id_token)
-    except Exception:
+    except Exception as exc:
+        import logging
+        logging.getLogger("subsonic.login").exception("Login failed: %s", exc)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid ID token",

@@ -364,9 +364,13 @@ function pageLogin(){
 
     try {
       const cred = await firebase.auth().signInWithEmailAndPassword(email, password);
-      if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada. Redirigiendo…"; }
       const profile = await _onFirebaseLogin(cred.user);
-      setTimeout(()=> _redirectByRole(profile?.role || "client"), 450);
+      if (!profile) {
+        if(toast){ toast.style.display="block"; toast.textContent="Error: no se pudo verificar la sesión con el servidor."; }
+        return;
+      }
+      if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada. Redirigiendo…"; }
+      setTimeout(()=> _redirectByRole(profile.role || "client"), 450);
     } catch(err) {
       if(toast){ toast.style.display="block"; toast.textContent="Error: " + err.message; }
     }
@@ -381,9 +385,13 @@ function pageLogin(){
       try {
         const provider = new firebase.auth.GoogleAuthProvider();
         const cred = await firebase.auth().signInWithPopup(provider);
-        if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada con Google. Redirigiendo…"; }
         const profile = await _onFirebaseLogin(cred.user);
-        setTimeout(()=> _redirectByRole(profile?.role || "client"), 450);
+        if (!profile) {
+          if(toast){ toast.style.display="block"; toast.textContent="Error: no se pudo verificar la sesión con el servidor."; }
+          return;
+        }
+        if(toast){ toast.style.display="block"; toast.textContent="Sesión iniciada con Google. Redirigiendo…"; }
+        setTimeout(()=> _redirectByRole(profile.role || "client"), 450);
       } catch(err) {
         if(toast){ toast.style.display="block"; toast.textContent="Error: " + err.message; }
       }
