@@ -2779,44 +2779,72 @@ body[data-page="login"] {
   display: block;
 }
 
+/* Reset total para el botón Google en login - debe ser completamente diferente a otros botones */
 body[data-page="login"] #googleSignIn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 48px;
-  padding: 0 16px !important;
-  color: #202124 !important;
+  all: revert !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding: 0 20px !important;
+  color: #3c4043 !important;
   background: #fff !important;
   border: 1px solid #dadce0 !important;
-  border-radius: 8px;
-  box-shadow: 0 1px 1px rgba(60,64,67,0.12);
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.1px;
-  text-transform: none;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
+  letter-spacing: 0.25px !important;
+  text-transform: none !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: static !important;
+  transition: all 0.2s ease !important;
+}
+
+body[data-page="login"] #googleSignIn:hover {
+  background: #f8f9fa !important;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.15), 0 2px 8px 0 rgba(0,0,0,0.15) !important;
+}
+
+body[data-page="login"] #googleSignIn:active {
+  background: #f1f3f4 !important;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 3px 0 rgba(0,0,0,0.1) !important;
+}
+
+body[data-page="login"] #googleSignIn:focus {
+  outline: 0 !important;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1), 0 0 0 3px rgba(66,133,244,0.1) !important;
+}
+
+body[data-page="login"] #googleSignIn.btn,
+body[data-page="login"] #googleSignIn.btn.secondary {
+  color: #3c4043 !important;
+  background: #fff !important;
+  border: 1px solid #dadce0 !important;
+  padding: 0 20px !important;
+  font-weight: 500 !important;
+}
+
+body[data-page="login"] #googleSignIn.btn.secondary:hover {
+  background: #f8f9fa !important;
 }
 
 body[data-page="login"] #googleSignIn::before {
   content: "";
   display: inline-block;
-  width: 18px;
-  height: 18px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath fill='%234285F4' d='M9 3.5c1.48 0 2.82.58 3.84 1.53L15.7 2.2C14.13.83 11.7 0 9 0 5.4 0 2.41 1.81.95 4.62l3.95 3.1C5.15 5.32 6.96 3.5 9 3.5z'/%3E%3Cpath fill='%2340A050' d='M1.09 5.61l3.19 2.5C4.65 7.26 6.69 6 9 6c1.12 0 2.15.3 3.04.82l2.3-2.28C13.31 3.07 11.28 2 9 2 7.4 2 5.9 2.42 4.65 3.18L1.09 5.61z'/%3E%3Cpath fill='%23FBBC05' d='M9 18c2.64 0 4.87-.86 6.49-2.33l-2.47-2.16C12.75 14.37 10.96 15 9 15c-2.27 0-4.2-1.36-5.17-3.34L1.15 12.5C2.6 15.14 5.5 18 9 18z'/%3E%3Cpath fill='%23EA4335' d='M17.64 9.2c0-.65-.06-1.28-.16-1.86H9v3.48h4.84c-.21 1.15-.84 2.13-1.81 2.79l2.93 2.26c1.71-1.59 2.74-3.92 2.74-6.67z'/%3E%3C/svg%3E");
-  background-position: center;
-  background-size: 18px 18px;
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z' fill='%234285F4' fill-rule='nonzero'/%3E%3Cpath d='M13.46 15.13c-.83.63-1.96 1.25-3.46 1.25-2.64 0-4.84-1.74-5.64-4.15H1.07v2.47C2.88 17.75 6.18 20 10 20c2.7 0 4.96-.89 6.62-2.64l-3.16-2.23z' fill='%2334A853' fill-rule='nonzero'/%3E%3Cpath d='M3.99 10c0-.69.12-1.35.32-1.97V5.56H1.07A9.973 9.973 0 000 10c0 1.56.27 3.09.75 4.44l3.15-2.47c-.2-.62-.32-1.28-.32-1.97z' fill='%23FBBC05' fill-rule='nonzero'/%3E%3Cpath d='M10 3.88c2.11 0 3.54.75 4.37 1.37l3.29-3.26C14.96.99 12.7 0 10 0 6.18 0 2.88 2.25 1.07 5.56l3.15 2.47c.8-2.41 3-4.15 5.64-4.15z' fill='%23EA4335' fill-rule='nonzero'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 20px 20px;
   background-repeat: no-repeat;
   flex-shrink: 0;
 }
 
-body[data-page="login"] #googleSignIn:hover {
-  background: #f7f8fa !important;
-}
-
-body[data-page="login"] #googleSignIn:active {
-  box-shadow: inset 0 1px 2px rgba(60,64,67,0.2);
-}
 
 .toast {
   text-align: center;
