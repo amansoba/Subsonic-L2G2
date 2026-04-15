@@ -1,13 +1,13 @@
-import { getUserProfile } from './apiService.js';
+import { authFetch, config } from './apiService.js';
 
-// --- Auth Simulation ---
+// --- Auth Check ---
 const checkAuth = () => {
-    const userId = localStorage.getItem('loggedInUserId');
-    if (!userId) {
+    const session = JSON.parse(localStorage.getItem('subsonic_session') || 'null');
+    if (!session) {
         window.location.href = '../auth/login.html';
-        return null;
+        return false;
     }
-    return parseInt(userId, 10);
+    return true;
 };
 
 
@@ -25,19 +25,19 @@ const renderTickets = (tickets, container) => {
 
     tickets.forEach(ticket => {
         const row = container.insertRow();
-        const purchaseDate = new Date(ticket.purchaseDate);
+        const purchaseDate = new Date(ticket.purchase_date);
         const formattedDate = purchaseDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
         row.innerHTML = `
             <td>
-                <strong>${ticket.eventName}</strong><br>
-                <span class="small">${ticket.ticketId}</span>
+                <strong>${ticket.event_name}</strong><br>
+                <span class="small">${ticket.id}</span>
             </td>
-            <td>${ticket.passName}</td>
+            <td>${ticket.pass_name}</td>
             <td>${formattedDate}</td>
-            <td><span class="badge" style="background: var(--accent-green);">Válida</span></td>
+            <td><span class="badge" style="background: var(--accent-green);">${ticket.status}</span></td>
             <td class="right">
-                <a href="ticket.html?id=${ticket.ticketId}" class="btn small-btn">Ver Entrada</a>
+                <a href="ticket.html?id=${ticket.id}" class="btn small-btn">Ver Entrada</a>
             </td>
         `;
     });
@@ -46,8 +46,7 @@ const renderTickets = (tickets, container) => {
 
 // --- Page Load ---
 const loadTicketsPage = async () => {
-    const userId = checkAuth();
-    if (!userId) return;
+    if (!checkAuth()) return;
 
     const tableBody = document.getElementById('ticketsTableBody');
     const loadingRow = tableBody.insertRow();
@@ -57,8 +56,16 @@ const loadTicketsPage = async () => {
     loadingCell.style.textAlign = 'center';
 
     try {
-        const user = await getUserProfile(userId);
-        renderTickets(user.tickets, tableBody);
+        const response = await authFetch(`${config.API_BASE_URL}/tickets`);
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const tickets = await response.json();
+        renderTickets(tickets, tableBody);
     } catch (error) {
         console.error('Error al cargar las entradas:', error);
         tableBody.innerHTML = '';
