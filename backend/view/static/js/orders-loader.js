@@ -1,13 +1,13 @@
-import { getUserProfile } from './apiService.js';
+import { authFetch, config } from './apiService.js';
 
-// --- Auth Simulation ---
+// --- Auth Check ---
 const checkAuth = () => {
-    const userId = localStorage.getItem('loggedInUserId');
-    if (!userId) {
+    const session = JSON.parse(localStorage.getItem('subsonic_session') || 'null');
+    if (!session) {
         window.location.href = '../auth/login.html';
-        return null;
+        return false;
     }
-    return parseInt(userId, 10);
+    return true;
 };
 
 // --- UI Rendering ---
@@ -24,18 +24,18 @@ const renderOrders = (orders, container) => {
 
         const orderItems = order.items.map(item => `
             <div class="order-item">
-                <span>${item.quantity} x ${item.name}</span>
+                <span>${item.quantity} x ${item.product_name}</span>
                 <span>${(item.price * item.quantity).toFixed(2)} €</span>
             </div>
         `).join('');
         
-        const orderDate = new Date(order.date);
+        const orderDate = new Date(order.purchase_date);
         const formattedDate = orderDate.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
         orderCard.innerHTML = `
             <div class="order-header">
                 <div>
-                    <h3 class="order-id">Pedido: ${order.orderId}</h3>
+                    <h3 class="order-id">Pedido: ${order.id}</h3>
                     <p class="small">Fecha: ${formattedDate}</p>
                 </div>
                 <div class="order-total">
@@ -58,15 +58,22 @@ const renderOrders = (orders, container) => {
 
 // --- Page Load ---
 const loadOrdersPage = async () => {
-    const userId = checkAuth();
-    if (!userId) return;
+    if (!checkAuth()) return;
 
     const ordersListContainer = document.getElementById('ordersList');
     ordersListContainer.innerHTML = '<p>Cargando tus pedidos...</p>';
 
     try {
-        const user = await getUserProfile(userId);
-        renderOrders(user.orders, ordersListContainer);
+        const response = await authFetch(`${config.API_BASE_URL}/orders`);
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const orders = await response.json();
+        renderOrders(orders, ordersListContainer);
     } catch (error) {
         console.error('Error al cargar los pedidos:', error);
         ordersListContainer.innerHTML = `<p class="error-message">Hubo un problema al cargar tus pedidos. ${error.message}</p>`;

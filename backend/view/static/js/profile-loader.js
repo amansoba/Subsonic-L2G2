@@ -1,26 +1,13 @@
 import { getUserProfile } from './apiService.js';
 
-// --- Auth Simulation ---
-/**
- * Checks for a logged-in user.
- * In a real app, this would be a more robust check (e.g., against a session token).
- * For now, we'll check for a 'userId' in localStorage.
- * If not found, redirect to the login page.
- */
+// --- Auth Check ---
 const checkAuth = () => {
-    // For simulation purposes, let's log in user 1 if no one is logged in.
-    if (!localStorage.getItem('loggedInUserId')) {
-        console.log('No user logged in. Simulating login for user with ID 1.');
-        localStorage.setItem('loggedInUserId', '1');
-    }
-
-    const userId = localStorage.getItem('loggedInUserId');
-    if (!userId) {
-        console.log('Redirecting to login page.');
+    const session = JSON.parse(localStorage.getItem('subsonic_session') || 'null');
+    if (!session) {
         window.location.href = '../auth/login.html';
         return null;
     }
-    return parseInt(userId, 10);
+    return session.id;
 };
 
 
@@ -33,7 +20,7 @@ const renderProfile = (user) => {
     }
     document.getElementById('name').value = user.name;
     document.getElementById('email').value = user.email;
-    document.getElementById('username').value = user.username;
+    document.getElementById('username').value = user.email; // Use email as username
     
     const joinDate = new Date(user.joinDate);
     document.getElementById('joinDate').value = joinDate.toLocaleDateString('es-ES', {

@@ -323,7 +323,7 @@ async function _onFirebaseLogin(firebaseUser) {
     );
     if (!res.ok) throw new Error('login failed');
     const profile = await res.json();
-    setSession({ email: profile.email, role: profile.role, name: profile.name || firebaseUser.displayName || profile.email.split('@')[0] });
+    setSession({ id: profile.id, email: profile.email, role: profile.role, name: profile.name || firebaseUser.displayName || profile.email.split('@')[0] });
     return profile;
   } catch (err) {
     console.error('Subsonic login error', err);
