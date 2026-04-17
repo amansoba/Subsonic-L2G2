@@ -46,6 +46,7 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
     response.set_cookie(
         key="subsonic_role",
         value=user.role,
+        path="/",
         httponly=True,
         samesite="lax",
         max_age=60 * 60 * 24 * 7,  # 7 days
@@ -56,7 +57,7 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
 @router.post("/logout", status_code=200)
 def logout(response: Response):
     """Clear the role cookie.  The frontend also discards its token."""
-    response.delete_cookie("subsonic_role")
+    response.delete_cookie("subsonic_role", path="/")
     return {"message": "Logged out"}
 
 
