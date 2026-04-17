@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 :root{
   --bg0:#07070b;
   --bg1:#0b0b12;
@@ -19,6 +21,9 @@
 
   --shadow: 0 18px 70px rgba(0,0,0,.55);
   --radius: 18px;
+  --font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 *{ box-sizing:border-box; }
@@ -28,8 +33,9 @@ body{ min-height:100vh; }
 body{
   margin:0;
   color:var(--text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
   font-weight:400;
+  letter-spacing:0;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   background:
@@ -55,10 +61,11 @@ img{ max-width:100%; display:block; }
 
 .hr{ height:1px; background:var(--line); margin:14px 0; }
 
-/* Typography accents (ornamental headline) */
+/* Typography accents */
 .h-title{
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-  letter-spacing: .6px;
+  font-family: var(--font-display);
+  letter-spacing: 0;
+  font-weight:800;
 }
 .h-sub{
   color:var(--muted);
@@ -121,8 +128,8 @@ header{
 
 .brand span:last-child{
   font-weight:900;
-  letter-spacing:1px;
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  letter-spacing:0;
+  font-family: var(--font-display);
 }
 
 .navlinks{
@@ -134,6 +141,9 @@ header{
 }
 
 .navlinks a{
+  font-family: var(--font-display);
+  font-weight:700;
+  letter-spacing:0;
   padding:8px 8px;
   border-radius:12px;
   color:var(--muted);
@@ -177,7 +187,7 @@ header{
 }
 
 .badge{
-  display: inline-block;
+  display: inline-flex;
   align-items:center;
   gap:8px;
   padding:6px 10px;
@@ -185,6 +195,9 @@ header{
   border:1px solid var(--line);
   color:var(--muted);
   font-size:12px;
+  font-family:var(--font-display);
+  font-weight:700;
+  letter-spacing:0;
   background: rgba(0,0,0,.18);
 }
 
@@ -319,7 +332,7 @@ header{
     font-weight: 800;
     color: #fff;
     margin: 0;
-    letter-spacing: -0.5px;
+    letter-spacing: 0;
 }
 
 .artist-modal-track-artist {
@@ -611,7 +624,9 @@ header{
   cursor:pointer;
   padding:10px 14px;
   border-radius: 14px;
+  font-family:var(--font-display);
   font-weight:800;
+  letter-spacing:0;
   color:#120f0a;
   background:
     linear-gradient(90deg, var(--gold1), var(--gold2));
@@ -642,10 +657,11 @@ header{
    Forms
    ========================================================= */
 
-label{ display:block; color:var(--muted); font-size:12px; margin-bottom:6px; }
+label{ display:block; color:var(--muted); font-size:12px; margin-bottom:6px; font-family:var(--font-display); font-weight:700; letter-spacing:0; }
 .field{ margin-bottom:12px; }
 
 input, select, textarea{
+  font-family:var(--font-body);
   width:100%;
   border-radius: 14px;
   border:1px solid var(--line);
@@ -948,8 +964,8 @@ input:focus, select:focus, textarea:focus{
   text-shadow: 
     0 0 80px rgba(247,211,123,.4),
     0 0 120px rgba(255,79,216,.25);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  letter-spacing: -1px;
+  font-family: var(--font-display);
+  letter-spacing: 0;
   line-height: 1.1;
   filter: drop-shadow(0 0 40px rgba(247,211,123,.35)) 
           drop-shadow(0 0 80px rgba(255,79,216,.2));
@@ -1023,7 +1039,7 @@ input:focus, select:focus, textarea:focus{
   font-size: 24px;
   font-weight: 850;
   margin-top: 12px;
-  letter-spacing: -0.5px;
+  letter-spacing: 0;
   background: linear-gradient(135deg, rgba(247,211,123,.95), rgba(37,211,238,.9));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1228,7 +1244,6 @@ input:focus, select:focus, textarea:focus{
 
 /* =========================================================
    EXTRA STYLES — Store / Product / Cart / Orders / Help
-   (Añadir al final del styles.css)
    ========================================================= */
 
 .section{
@@ -2180,7 +2195,7 @@ footer{
   font-size: 28px;
   font-weight: 900;
   color: rgba(255,255,255,0.98);
-  letter-spacing: -0.5px;
+  letter-spacing: 0;
   line-height: 1.2;
   max-width: 100%;
 }
@@ -2634,8 +2649,8 @@ footer{
   font-weight: 900;
   color: var(--text);
   margin: 0 0 12px 0;
-  letter-spacing: -1px;
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  letter-spacing: 0;
+  font-family: var(--font-display);
 }
 
 .faq-subtitle {
@@ -2863,7 +2878,7 @@ footer{
   font-weight: 700;
   color: var(--text);
   margin: 0 0 8px 0;
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-family: var(--font-display);
 }
 
 .faq-contact-subtitle {
@@ -3069,7 +3084,7 @@ body[data-page="login"] {
   padding: 0;
   background: transparent;
   color: #1a1a1a;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-family: var(--font-body);
 }
 
 .loginPage {
@@ -3119,8 +3134,8 @@ body[data-page="login"] {
   color: #1a1a1a;
   margin: 0;
   text-align: center;
-  font-family: ui-serif, Georgia, "Times New Roman", serif;
-  letter-spacing: 0.5px;
+  font-family: var(--font-display);
+  letter-spacing: 0;
 }
 
 .loginSubtitle {
@@ -3275,8 +3290,8 @@ body[data-page="login"] #googleSignIn {
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1), 0 2px 4px 0 rgba(0,0,0,0.1) !important;
   font-weight: 500 !important;
   font-size: 15px !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
-  letter-spacing: 0.25px !important;
+  font-family: var(--font-body) !important;
+  letter-spacing: 0 !important;
   text-transform: none !important;
   cursor: pointer !important;
   opacity: 1 !important;
