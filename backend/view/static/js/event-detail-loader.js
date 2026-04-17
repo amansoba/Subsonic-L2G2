@@ -1,5 +1,11 @@
 import { getEventWithArtists } from './apiService.js';
-import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-3';
+
+const parseLocalDate = (isoDate) => {
+    const [year, month, day] = String(isoDate || '').split('-').map(Number);
+    if (!year || !month || !day) return new Date(isoDate);
+    return new Date(year, month - 1, day);
+};
 
 const getEventId = () => {
     const params = new URLSearchParams(window.location.search);
@@ -68,7 +74,7 @@ const renderEvent = (event) => {
         return;
     }
 
-    const eventDate = new Date(event.date);
+    const eventDate = parseLocalDate(event.date);
     const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = eventDate.toLocaleDateString('es-ES', dateOptions);
 
@@ -93,7 +99,6 @@ const loadEventPage = async () => {
         return;
     }
 
-    // Show a loading state inside the main sections
     document.getElementById('evName').textContent = 'Cargando evento...';
     document.getElementById('artistList').innerHTML = '<p>Cargando artistas...</p>';
     document.getElementById('passList').innerHTML = '<p>Cargando pases...</p>';

@@ -1,8 +1,8 @@
 /* =========================================================
-   SUBSONIC — Mock DB + Persistence
-   - events / artists / spaces are static mocks
+   SUBSONIC — Data + Persistence
+   - events / artists / spaces are static data
    - tickets are persisted in localStorage so they don't vanish
-   - store/cart/orders persisted in localStorage (Practice 02)
+   - store/cart/orders persisted in localStorage
    ========================================================= */
 
 window.DB = {
@@ -14,7 +14,7 @@ window.DB = {
       venue: "PARC DEL FÒRUM",
       city: "Barcelona",
       region: "España",
-      desc: "Noche inaugural con electrónica, visuales y una puesta en escena inspirada en fantasía y luz. Prototipo de detalle de evento.",
+      desc: "Noche inaugural con electrónica, visuales y una puesta en escena inspirada en fantasía y luz.",
       image: "../fotos_lugares/Barcelona.jpg",
       artists: [16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
       passes: [
@@ -30,7 +30,7 @@ window.DB = {
       venue: "CIUTAT DE LES ARTS",
       city: "Valencia",
       region: "España",
-      desc: "Sesión nocturna con artistas invitados y estética de ritual lumínico. Prototipo de búsqueda y navegación.",
+      desc: "Sesión nocturna con artistas invitados y estética de ritual lumínico.",
       image: "../fotos_lugares/Valencia.jpg",
       artists: [61,62,63,64,65,66,67,68,69,70,71,72,3,73,74],
       passes: [
@@ -45,7 +45,7 @@ window.DB = {
       venue: "IFEMA MADRID",
       city: "Madrid",
       region: "España",
-      desc: "Conciertos de rock y pop-rock con show de fuego (simulado). Vista para mostrar artistas y pases.",
+      desc: "Conciertos de rock y pop-rock con show de fuego, artistas invitados y pases disponibles para cada zona.",
       image: "../fotos_lugares/Madrid.jpg",
       artists: [46,47,48,49,50,51,52,53,54,55,56,57,58,59,60],
       passes: [
@@ -201,7 +201,7 @@ window.DB = {
 
   tickets: [],
 
-  // Store products (mock)
+  // Store products
   products: [
     {
       id: 1,

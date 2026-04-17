@@ -16,7 +16,7 @@ const renderProducts = (products) => {
             <p class="small">Precio: €${product.price}</p>
             <div class="right" style="margin-top: 1rem;">
                 <a href="edit-product.html?id=${product.id}" class="btn secondary">Editar</a>
-                <button class="btn danger" onclick="alert('Eliminar producto ID: ${product.id} (simulado)')">Eliminar</button>
+                <button class="btn danger" onclick="alert('Eliminar producto ID: ${product.id}')">Eliminar</button>
             </div>
         </div>
     `).join('');

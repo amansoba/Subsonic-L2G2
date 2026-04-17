@@ -213,7 +213,7 @@
     const footer = modal.querySelector('#artistModalFooter');
     if(footer){
       footer.innerHTML = `
-        <small>No hay canciones de Spotify conectadas para ${escapeHtml(artistName)} todavia.</small>
+        <small>No hay canciones de Spotify conectadas para ${escapeHtml(artistName)} todavía.</small>
         <a
           class="btn secondary"
           href="https://open.spotify.com/search/${encodeURIComponent(artistName)}"

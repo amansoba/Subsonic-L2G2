@@ -1,5 +1,5 @@
 import { getEventWithArtists } from './apiService.js';
-import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-3';
 
 // Helper function to split an array into chunks
 const chunkArray = (array, size) => {

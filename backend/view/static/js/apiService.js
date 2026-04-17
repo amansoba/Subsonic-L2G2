@@ -85,13 +85,13 @@ const simulateLatency = (min = 800, max = 1500) => {
 
 /**
  * Fetches events data.
- * It uses a mock backend if USE_MOCK_BACKEND is true in the config.
+ * It uses local data if USE_MOCK_BACKEND is true in the config.
  * Otherwise, it fetches from the real API.
  * @returns {Promise<Array<Object>>} A promise that resolves to the list of events.
  */
 export const getEvents = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for events.");
+    console.log("Using local data for events.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.events);
     if (!response.ok) {
@@ -128,7 +128,7 @@ export const getEvents = async () => {
  */
 export const getEventWithArtists = async (eventId) => {
   if (config.USE_MOCK_BACKEND) {
-    console.log(`Using mock backend for event ${eventId} with artists.`);
+    console.log(`Using local data for event ${eventId} with artists.`);
     
 
     // Fetch both events and artists
@@ -138,7 +138,7 @@ export const getEventWithArtists = async (eventId) => {
     ]);
 
     if (!eventsResponse.ok || !artistsResponse.ok) {
-      throw new Error('Failed to fetch mock data.');
+      throw new Error('No se pudieron cargar los datos.');
     }
 
     const events = await eventsResponse.json();
@@ -147,7 +147,7 @@ export const getEventWithArtists = async (eventId) => {
     // Find the specific event
     const event = events.find(e => e.id === eventId);
     if (!event) {
-      throw new Error(`Event with ID ${eventId} not found in mock data.`);
+      throw new Error(`No se ha encontrado el evento ${eventId}.`);
     }
 
     // Map artist IDs to full artist objects
@@ -179,7 +179,7 @@ export const getEventWithArtists = async (eventId) => {
  */
 export const getAllArtists = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for all artists.");
+    console.log("Using local data for all artists.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.artists);
     if (!response.ok) {
@@ -210,7 +210,7 @@ export const getAllArtists = async () => {
  */
 export const getAllProducts = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for all products.");
+    console.log("Using local data for all products.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.products);
     if (!response.ok) {
@@ -241,7 +241,7 @@ export const getAllProducts = async () => {
  */
 export const getSpaces = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for all spaces.");
+    console.log("Using local data for all spaces.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.spaces);
     if (!response.ok) {
@@ -273,14 +273,14 @@ export const getSpaces = async () => {
  */
 export const getSpaceById = async (spaceId) => {
   if (config.USE_MOCK_BACKEND) {
-    console.log(`Using mock backend for space ${spaceId}.`);
+    console.log(`Using local data for space ${spaceId}.`);
     
     
     const spaces = await getSpaces(); // Reuse existing function
     const space = spaces.find(s => s.id === spaceId);
 
     if (!space) {
-      throw new Error(`Space with ID ${spaceId} not found in mock data.`);
+      throw new Error(`No se ha encontrado el espacio ${spaceId}.`);
     }
     return space;
   } else {
@@ -306,7 +306,7 @@ export const getSpaceById = async (spaceId) => {
  */
 export const getExperiences = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for all experiences.");
+    console.log("Using local data for all experiences.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.experiences);
     if (!response.ok) {
@@ -338,14 +338,14 @@ export const getExperiences = async () => {
  */
 export const getProductById = async (productId) => {
   if (config.USE_MOCK_BACKEND) {
-    console.log(`Using mock backend for product ${productId}.`);
+    console.log(`Using local data for product ${productId}.`);
     
     
     const products = await getAllProducts(); // Reuse existing function
     const product = products.find(p => p.id === productId);
 
     if (!product) {
-      throw new Error(`Product with ID ${productId} not found in mock data.`);
+      throw new Error(`No se ha encontrado el producto ${productId}.`);
     }
     return product;
   } else {
@@ -372,14 +372,14 @@ export const getProductById = async (productId) => {
  */
 export const getArtistById = async (artistId) => {
   if (config.USE_MOCK_BACKEND) {
-    console.log(`Using mock backend for artist ${artistId}.`);
+    console.log(`Using local data for artist ${artistId}.`);
     
     
     const artists = await getAllArtists(); // Reuse existing function
     const artist = artists.find(a => a.id === artistId);
 
     if (!artist) {
-      throw new Error(`Artist with ID ${artistId} not found in mock data.`);
+      throw new Error(`No se ha encontrado el artista ${artistId}.`);
     }
     return artist;
   } else {
@@ -405,7 +405,7 @@ export const getArtistById = async (artistId) => {
  */
 export const getAllUsers = async () => {
   if (config.USE_MOCK_BACKEND) {
-    console.log("Using mock backend for all users.");
+    console.log("Using local data for all users.");
     
     const response = await fetch(config.MOCK_DATA_PATHS.users);
     if (!response.ok) {
@@ -444,7 +444,7 @@ export const getCurrentUserProfile = async () => {
     const session = _getStoredSession();
     const user = users.find(u => u.id === session?.id || u.email === session?.email);
     if (!user) {
-      throw new Error('User not found in mock data.');
+      throw new Error('No se ha encontrado el usuario.');
     }
     return user;
   }
@@ -489,7 +489,7 @@ export const updateCurrentUserProfile = async (data) => {
  */
 export const getUserProfile = async (userId) => {
   if (config.USE_MOCK_BACKEND) {
-    console.log(`Using mock backend for user ${userId}.`);
+    console.log(`Using local data for user ${userId}.`);
     
     
     const response = await fetch(config.MOCK_DATA_PATHS.users);
@@ -500,7 +500,7 @@ export const getUserProfile = async (userId) => {
     const user = users.find(u => u.id === userId);
 
     if (!user) {
-      throw new Error(`User with ID ${userId} not found in mock data.`);
+      throw new Error(`No se ha encontrado el usuario ${userId}.`);
     }
     return user;
   } else {

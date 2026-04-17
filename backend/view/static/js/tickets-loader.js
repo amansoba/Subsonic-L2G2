@@ -60,7 +60,7 @@ const renderTickets = (tickets, container) => {
         const row = container.insertRow();
         const cell = row.insertCell();
         cell.colSpan = 5;
-        cell.textContent = 'No has comprado ninguna entrada todavia.';
+        cell.textContent = 'No has comprado ninguna entrada todavía.';
         cell.style.textAlign = 'center';
         return;
     }

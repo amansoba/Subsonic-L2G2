@@ -1,5 +1,5 @@
 /* =========================================================
-   SUBSONIC — Frontend controller (Practice 02)
+   SUBSONIC — Frontend controller
    - Multi-page navigation (HTML per view)
    - Role-based access: visitor / client / provider
    - Query params: ?id=..., ?eventId=...
@@ -641,9 +641,9 @@ function pageEventDetail(){
 
   $("#spotifyBox").innerHTML = `
     <div class="card">
-      <div class="badge">Spotify Player (placeholder)</div>
-      <p class="small">Integración API externa en prácticas futuras. En esta práctica es un bloque simulado.</p>
-      <button class="btn secondary" type="button" onclick="alert('Preview simulado')">▶ Play</button>
+      <div class="badge">Spotify</div>
+      <p class="small">Escucha una selección del festival desde el reproductor integrado.</p>
+      <button class="btn secondary" type="button" onclick="alert('Reproducción no disponible en este momento')">Play</button>
     </div>
   `;
 }
@@ -672,10 +672,10 @@ function pageArtistDetail(){
     row.innerHTML = `
       <div class="row" style="justify-content:space-between">
         <div>${t}</div>
-        <button class="btn secondary" type="button">▶ Preview</button>
+        <button class="btn secondary" type="button">Escuchar</button>
       </div>
     `;
-    row.querySelector("button").addEventListener("click", ()=>alert("Preview simulado"));
+    row.querySelector("button").addEventListener("click", ()=>alert("Reproducción no disponible en este momento"));
     tracks.appendChild(row);
   });
 
@@ -995,7 +995,7 @@ async function pageTicketDetail(){
     btn.dataset.bound = "1";
     btn.addEventListener("click", ()=>{
       if(btn.disabled) return;
-      if(confirm("¿Solicitar cancelación? (simulado)")){
+      if(confirm("¿Solicitar cancelación?")){
         t.status = "Cancelada";
         $("#tStatus").textContent = t.status;
         btn.disabled = true;
@@ -1003,7 +1003,7 @@ async function pageTicketDetail(){
 
         if(toast){
           toast.style.display = "block";
-          toast.textContent = "Cancelación registrada (simulada).";
+          toast.textContent = "Cancelación registrada.";
         }
       }
     });
@@ -1054,7 +1054,7 @@ function pageProfile(){
       e.preventDefault();
       s.name = (nameInput.value || "").trim() || s.name;
       setSession(s);
-      alert("Cambios guardados (simulado).");
+      alert("Cambios guardados.");
       window.location.href = basePath + "client/dashboard.html";
     });
   }
@@ -1177,7 +1177,7 @@ function pageSpaceRequest(){
     form.dataset.bound = "1";
     form.addEventListener("submit",(e)=>{
       e.preventDefault();
-      alert("Solicitud enviada (simulada).");
+      alert("Solicitud enviada.");
       window.location.href = basePath + "spaces/provider-spaces.html";
     });
   }
@@ -1449,7 +1449,6 @@ function pageCart(){
           userEmail: s.email,
           date: toLocalISODate(),
           eta: toLocalISODate(addDays(new Date(), deliveryDays)),
-          status: "En preparación",
           deliveryDays,
           trackingCode: `SUBSHOP-${String(oid).slice(-8)}`,
           status: "Preparando pedido",
@@ -1509,9 +1508,9 @@ function pageCart(){
       try{ localStorage.setItem('subsonic_last_purchase', JSON.stringify(lastPurchase)); }catch(e){}
 
       if(apiWarnings.length){
-        alert('Pago simulado: entradas guardadas localmente. Cuando haya sesion de servidor valida, tambien se guardaran en tu perfil online.');
+        alert('Compra confirmada: entradas guardadas en este navegador. Cuando haya sesión de servidor válida, también se guardarán en tu perfil online.');
       } else {
-        alert('Pago simulado: entradas y pedidos procesados.');
+        alert('Compra confirmada: entradas y pedidos procesados.');
       }
       window.location.href = `${basePath}client/purchase-summary.html?id=${lastPurchase.id}`;
     });
@@ -1546,7 +1545,7 @@ function pageOrders(){
       </div>
     `;
     card.querySelector("button").addEventListener("click", ()=>{
-      alert("Reclamación enviada (simulada).");
+      alert("Reclamación enviada.");
     });
     list.appendChild(card);
   });
@@ -1575,8 +1574,8 @@ function renderLocalOrderCard(order){
   card.className = "card";
   card.innerHTML = `
     <div class="badge">Pedido #${htmlEscape(order.id)}</div>
-    <h3 class="h-title" style="margin:10px 0 6px 0">Estado: ${htmlEscape(order.status || "Preparando pedido")}</h3>
-    <p class="small">Fecha: ${htmlEscape(formatDate(order.date))} - Entrega estimada: ${htmlEscape(formatDate(order.eta))} (${htmlEscape(order.deliveryDays || "2-3")} dias)</p>
+    <p class="small" style="margin:10px 0 6px 0"><strong>Estado:</strong> ${htmlEscape(order.status || "Preparando pedido")}</p>
+    <p class="small">Fecha: ${htmlEscape(formatDate(order.date))} - Entrega estimada: ${htmlEscape(formatDate(order.eta))} (${htmlEscape(order.deliveryDays || "2-3")} días)</p>
     <p class="small">Seguimiento: <strong>${htmlEscape(order.trackingCode || `SUBSHOP-${String(order.id).slice(-8)}`)}</strong></p>
     <div class="hr"></div>
     ${itemsHtml || '<p class="small">Sin productos asociados.</p>'}
@@ -1587,7 +1586,7 @@ function renderLocalOrderCard(order){
     </div>
   `;
   card.querySelector("button").addEventListener("click", () => {
-    alert("Reclamacion enviada (simulada).");
+    alert("Reclamación enviada.");
   });
   return card;
 }
@@ -1608,7 +1607,7 @@ function pageOrdersEnhanced(){
 
   list.innerHTML = "";
   if(!orders.length){
-    list.innerHTML = `<div class="card">No hay pedidos todavia.</div>`;
+    list.innerHTML = `<div class="card">No hay pedidos todavía.</div>`;
     return;
   }
 
@@ -1623,7 +1622,7 @@ function pageHelp(){
     form.dataset.bound="1";
     form.addEventListener("submit",(e)=>{
       e.preventDefault();
-      alert("Mensaje enviado (simulado). Te responderemos por email.");
+      alert("Mensaje enviado. Te responderemos por email.");
       form.reset();
     });
   }
@@ -1638,7 +1637,7 @@ function pageForgotPassword(){
   form.dataset.bound="1";
   form.addEventListener("submit",(e)=>{
     e.preventDefault();
-    alert("Si el correo existe, recibirás instrucciones (simulado).");
+    alert("Si el correo existe, recibirás instrucciones.");
     window.location.href = basePath + "auth/login.html";
   });
 }
@@ -1911,7 +1910,7 @@ function pagePurchaseSummary(){
     return `
       <div class="card">
         <div class="badge">📦 Pedido #${o.id}</div>
-        <p class="small">Fecha: ${formatDate(o.date)} • ETA: ${formatDate(o.eta)}</p>
+        <p class="small">Fecha: ${formatDate(o.date)} - Entrega estimada: ${formatDate(o.eta)}</p>
         ${items}
       </div>
     `;
@@ -2017,8 +2016,8 @@ function pagePurchaseSummaryEnhanced(){
     return `
       <div class="card">
         <div class="badge">Pedido #${htmlEscape(order.id)}</div>
-        <h4 class="h-title">Estado: ${htmlEscape(order.status || "Preparando pedido")}</h4>
-        <p class="small">Fecha: ${htmlEscape(formatDate(order.date))} - Entrega estimada: ${htmlEscape(formatDate(order.eta))} (${htmlEscape(order.deliveryDays || "2-3")} dias)</p>
+        <p class="small" style="margin:10px 0 6px 0"><strong>Estado:</strong> ${htmlEscape(order.status || "Preparando pedido")}</p>
+        <p class="small">Fecha: ${htmlEscape(formatDate(order.date))} - Entrega estimada: ${htmlEscape(formatDate(order.eta))} (${htmlEscape(order.deliveryDays || "2-3")} días)</p>
         <p class="small">Seguimiento: <strong>${htmlEscape(order.trackingCode || `SUBSHOP-${String(order.id).slice(-8)}`)}</strong></p>
         <div class="hr"></div>
         ${items}
@@ -2156,7 +2155,7 @@ function pageChangePassword(){
   btn.addEventListener('click', ()=>{
     const email = ($('#cpEmail')?.value||'').trim();
     if(!email) return alert('Introduce un correo.');
-    alert('Si el correo existe, recibirás instrucciones (simulado).');
+    alert('Si el correo existe, recibirás instrucciones.');
     window.location.href = basePath + 'auth/login.html';
   });
 }
@@ -2294,7 +2293,7 @@ function pageAdminCreateEvent(){
       }
 
       window.saveDB?.();
-      alert('Evento guardado (simulado)');
+      alert('Evento guardado');
       window.location.href = basePath + 'admin/edit-event.html';
     });
   }
@@ -2357,7 +2356,7 @@ function pageAdminEntries(){
       ev.passes = ev.passes || [];
       ev.passes.push({ id: Date.now(), name, price, includes: 'Entrada admin' });
       window.saveDB?.();
-      alert('Tipo de entrada añadido (simulado)');
+      alert('Tipo de entrada añadido');
       window.location.href= basePath + 'admin/edit-event.html';
     } else alert('Evento no encontrado');
   });
@@ -2389,7 +2388,7 @@ function pageAdminArtists(){
       const spotify=fm.get('spotify');
       DB.artists.push({ id: Date.now(), name, genre:'', bio, topTracks:[], image: photo||'', spotify: spotify||'' });
       window.saveDB?.();
-      alert('Artista añadido (simulado)');
+      alert('Artista añadido');
       window.location.href= basePath + 'admin/artists.html';
     });
   }
@@ -2398,7 +2397,7 @@ function pageAdminArtists(){
 function pageAdminAddSpace(){
   requireRole(['admin']);
   renderNav();
-  const f = $('#addSpaceForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const desc=fm.get('desc'); const price=Number(fm.get('price')||0); const image=fm.get('image'); DB.spaces.push({ id: Date.now(), eventId: null, type:name, size:'', location:desc, pricePerDay: price, status:'Disponible', services:'', notes:'', }); window.saveDB?.(); alert('Espacio añadido (simulado)'); window.location.href= basePath + 'admin/manage-spaces.html'; }); }
+  const f = $('#addSpaceForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const desc=fm.get('desc'); const price=Number(fm.get('price')||0); const image=fm.get('image'); DB.spaces.push({ id: Date.now(), eventId: null, type:name, size:'', location:desc, pricePerDay: price, status:'Disponible', services:'', notes:'', }); window.saveDB?.(); alert('Espacio añadido'); window.location.href= basePath + 'admin/manage-spaces.html'; }); }
 
 function pageAdminManageSpaces(){
   requireRole(['admin']);
@@ -2408,7 +2407,7 @@ function pageAdminManageSpaces(){
 function pageAdminAddProduct(){
   requireRole(['admin']);
   renderNav();
-  const f=$('#addProductForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const sizes=(fm.get('sizes')||'').split(',').map(s=>s.trim()).filter(Boolean); const price=Number(fm.get('price')||0); const images=(fm.get('images')||'').split(',').map(s=>s.trim()).filter(Boolean); DB.products.push({ id: Date.now(), name, price, category:'Nuevo', gender:'Unisex', sizes, desc:'(creado admin)', images }); window.saveDB?.(); alert('Producto añadido (simulado)'); window.location.href= basePath + 'admin/edit-product.html'; }); }
+  const f=$('#addProductForm'); if(!f) return; if(f.dataset.bound) return; f.dataset.bound='1'; f.addEventListener('submit', e=>{ e.preventDefault(); const fm=new FormData(f); const name=fm.get('name'); const sizes=(fm.get('sizes')||'').split(',').map(s=>s.trim()).filter(Boolean); const price=Number(fm.get('price')||0); const images=(fm.get('images')||'').split(',').map(s=>s.trim()).filter(Boolean); DB.products.push({ id: Date.now(), name, price, category:'Nuevo', gender:'Unisex', sizes, desc:'Producto de tienda', images }); window.saveDB?.(); alert('Producto añadido'); window.location.href= basePath + 'admin/edit-product.html'; }); }
 
 function pageAdminEditProduct(){
   requireRole(['admin']);

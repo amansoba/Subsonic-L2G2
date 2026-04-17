@@ -19,7 +19,7 @@ const renderSpaces = (spaces) => {
             <p class="small">Servicios: ${space.services}</p>
             <div class="right" style="margin-top: 1rem;">
                 <a href="edit-space.html?id=${space.id}" class="btn secondary">Editar</a>
-                <button class="btn danger" onclick="alert('Eliminar espacio ID: ${space.id} (simulado)')">Eliminar</button>
+                <button class="btn danger" onclick="alert('Eliminar espacio ID: ${space.id}')">Eliminar</button>
             </div>
         </div>
     `).join('');

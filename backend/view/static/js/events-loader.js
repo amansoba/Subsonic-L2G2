@@ -1,7 +1,13 @@
 import { getEvents } from './apiService.js';
 
+const parseLocalDate = (isoDate) => {
+    const [year, month, day] = String(isoDate || '').split('-').map(Number);
+    if (!year || !month || !day) return new Date(isoDate);
+    return new Date(year, month - 1, day);
+};
+
 const renderEvents = (events, container) => {
-    container.innerHTML = ''; // Clear previous content
+    container.innerHTML = '';
 
     if (!events || events.length === 0) {
         container.innerHTML = '<p>No se encontraron eventos. ¡Mantente al tanto!</p>';
@@ -9,11 +15,10 @@ const renderEvents = (events, container) => {
     }
 
     events.forEach(event => {
-        const eventDate = new Date(event.date);
+        const eventDate = parseLocalDate(event.date);
         const month = eventDate.toLocaleString('es-ES', { month: 'long' }).toUpperCase();
         const year = eventDate.getFullYear();
         
-        // Normalize region and name for data attributes
         const regionTag = event.region.toLowerCase().replace(/ /g, '-');
         let festivalTag = event.name.toLowerCase().replace('subsonic', '').trim().replace(/ /g, '-');
         if (regionTag === 'españa') {
@@ -24,7 +29,6 @@ const renderEvents = (events, container) => {
             festivalTag = `world ${festivalTag}`;
         }
 
-        // Determine the correct link for the festival detail page
         const simpleName = event.name.toLowerCase()
           .replace('subsonic', '')
           .replace('festival', '')
@@ -35,7 +39,6 @@ const renderEvents = (events, container) => {
         festivalCard.className = 'festival-card';
         festivalCard.setAttribute('data-festival', festivalTag);
         
-        // Region tag mapping for filters
         let regionFilterTag = 'world';
         if (regionTag === 'españa') regionFilterTag = 'spain';
         if (festivalTag.includes('winter')) regionFilterTag = 'winter';
@@ -75,11 +78,9 @@ const setupFiltering = (allEvents, container) => {
         tab.addEventListener('click', () => {
             const filter = tab.dataset.festival;
 
-            // Update active tab
             tabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
 
-            // Filter cards
             document.querySelectorAll('.festival-card').forEach(card => {
                 const cardRegion = card.dataset.region;
                 if (filter === 'all' || cardRegion === filter) {

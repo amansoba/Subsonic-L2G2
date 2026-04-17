@@ -339,7 +339,7 @@ export const SPOTIFY_TRACKS_BY_ARTIST_ID = {
   49: [
     { name: 'Copenhague' },
     { name: 'Valiente' },
-    { name: 'Los dias raros' },
+    { name: 'Los días raros' },
   ],
   50: [
     { name: 'La Llamada' },

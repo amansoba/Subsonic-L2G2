@@ -1,5 +1,5 @@
 import { getArtistById } from './apiService.js';
-import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-3';
 
 const getArtistId = () => {
     const params = new URLSearchParams(window.location.search);

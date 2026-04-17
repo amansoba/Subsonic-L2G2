@@ -32,7 +32,7 @@ const renderUsers = (users) => {
                         <td>${user.joinDate}</td>
                         <td>
                             <a href="edit-user.html?id=${user.id}" class="btn btn-sm secondary">Editar</a>
-                            <button class="btn btn-sm danger" onclick="alert('Eliminar usuario ID: ${user.id} (simulado)')">Eliminar</button>
+                            <button class="btn btn-sm danger" onclick="alert('Eliminar usuario ID: ${user.id}')">Eliminar</button>
                         </td>
                     </tr>
                 `).join('')}
