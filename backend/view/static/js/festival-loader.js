@@ -1,4 +1,5 @@
 import { getEventWithArtists } from './apiService.js';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
 
 // Helper function to split an array into chunks
 const chunkArray = (array, size) => {
@@ -41,10 +42,20 @@ const renderArtistLineup = (event) => {
 
     let artistsHTML = '';
     group.forEach(artist => {
+      const spotifyTracks = getSpotifyTracksForArtist(artist);
+      const firstTrack = spotifyTracks[0];
+
       artistsHTML += `
-        <div class="artist-card">
-          <span class="artist-name">${artist.name}</span>
-          <span class="artist-stage">${artist.genre}</span>
+        <div
+          class="artist-card"
+          data-artist="${escapeHtml(artist.name)}"
+          data-stage="${escapeHtml(artist.genre)}"
+          data-track="${escapeHtml(firstTrack?.name || 'Spotify')}"
+          data-spotify-track-id="${escapeHtml(firstTrack?.id || '')}"
+          data-spotify-tracks="${serializeSpotifyTracks(spotifyTracks)}"
+        >
+          <span class="artist-name">${escapeHtml(artist.name)}</span>
+          <span class="artist-stage">${escapeHtml(artist.genre)}</span>
         </div>
       `;
     });

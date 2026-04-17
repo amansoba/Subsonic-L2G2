@@ -1,4 +1,5 @@
 import { getArtistById } from './apiService.js';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
 
 const getArtistId = () => {
     const params = new URLSearchParams(window.location.search);
@@ -20,20 +21,42 @@ const renderArtist = (artist) => {
     document.getElementById('arGenre').textContent = artist.genre;
     document.getElementById('arBio').textContent = artist.bio;
 
-    // Placeholder for tracklist
+    const spotifyTracks = getSpotifyTracksForArtist(artist);
     const trackListContainer = document.getElementById('trackList');
-    trackListContainer.innerHTML = `
-        <div class="card small"><strong>Track 1:</strong> ${artist.name}'s Greatest Hit (Demo)</div>
-        <div class="card small"><strong>Track 2:</strong> Festival Anthem (Demo)</div>
-        <div class="card small"><strong>Track 3:</strong> Midnight Drive (Demo)</div>
-        <div class="card small"><strong>Track 4:</strong> Sunrise Groove (Demo)</div>
-    `;
+    if (spotifyTracks.length === 0) {
+        trackListContainer.innerHTML = `
+            <div class="card small">
+                Todavia no hay canciones de Spotify conectadas para ${escapeHtml(artist.name)}.
+            </div>
+        `;
+    } else {
+        trackListContainer.innerHTML = spotifyTracks.map((track, index) => `
+            <button
+                class="card small spotify-track-card artist-card"
+                type="button"
+                data-artist="${escapeHtml(artist.name)}"
+                data-stage="${escapeHtml(artist.genre)}"
+                data-track="${escapeHtml(track.name)}"
+                data-spotify-track-id="${escapeHtml(track.id)}"
+                data-spotify-start-index="${index}"
+                data-spotify-tracks="${serializeSpotifyTracks(spotifyTracks)}"
+            >
+                <strong>${index + 1}. ${escapeHtml(track.name)}</strong>
+                <span class="small">Reproducir en Spotify</span>
+            </button>
+        `).join('');
+    }
+
+    const backButton = document.getElementById('backToEvent');
+    if (backButton) {
+        backButton.href = 'artists.html';
+        backButton.textContent = '← Volver a artistas';
+    }
 
     // Dynamically update the back button if a source event is provided
     const params = new URLSearchParams(window.location.search);
     const eventId = params.get('eventId');
-    if (eventId) {
-        const backButton = document.getElementById('backToEvent');
+    if (eventId && backButton) {
         backButton.href = `event.html?id=${eventId}`;
         backButton.textContent = '← Volver al evento';
     }

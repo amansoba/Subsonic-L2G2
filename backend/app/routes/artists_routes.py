@@ -19,6 +19,9 @@ def _to_artist_read(artist) -> ArtistRead:
         bio=artist.bio,
         topTracks=artist.topTracks,
         image=artist.image,
+        spotifyTracks=artist.spotifyTracks,
+        spotifyTrackId=artist.spotifyTrackId,
+        spotifyTrackName=artist.spotifyTrackName,
     )
 
 

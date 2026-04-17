@@ -1939,6 +1939,8 @@ let artistModalState = {
 };
 
 function initArtistModal() {
+  if (document.querySelector('script[src*="player-modal.js"]')) return;
+
   const modal = document.getElementById('artistModal');
   if (!modal) return;
 

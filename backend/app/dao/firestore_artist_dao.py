@@ -36,6 +36,9 @@ class FirestoreArtistDAO:
             bio=data.get("bio", ""),
             topTracks=data.get("topTracks", []),
             image=data.get("image", ""),
+            spotifyTracks=data.get("spotifyTracks", []),
+            spotifyTrackId=data.get("spotifyTrackId"),
+            spotifyTrackName=data.get("spotifyTrackName"),
         )
         db.collection(self._collection).document(str(aid)).set(
             dataclass_to_dict(artist)

@@ -390,6 +390,207 @@ header{
     background: #ffcc00;
 }
 
+.spotify-track-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 12px 0;
+}
+
+.spotify-track-chip {
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.86);
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.spotify-track-chip.active,
+.spotify-track-chip:hover {
+  background: rgba(30,215,96,0.18);
+  border-color: rgba(30,215,96,0.45);
+  color: #fff;
+}
+
+.spotify-track-card {
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+}
+
+.artist-modal .artist-modal-overlay {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(247,211,123,0.16), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(37,211,238,0.12), transparent 26%),
+    rgba(0,0,0,0.78);
+}
+
+.artist-modal .artist-modal-content {
+  width: min(920px, calc(100% - 32px));
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border-radius: 18px;
+  padding: 0;
+  align-items: stretch;
+  background:
+    linear-gradient(145deg, rgba(16,16,22,0.97), rgba(8,8,12,0.98)),
+    rgba(8,8,12,0.98);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 30px 100px rgba(0,0,0,0.82);
+}
+
+.artist-modal .artist-modal-close {
+  z-index: 2;
+  right: 18px;
+  top: 18px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.08);
+}
+
+.artist-modal .artist-modal-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  text-align: left;
+}
+
+.artist-modal .artist-modal-album {
+  display: none !important;
+}
+
+.artist-modal .artist-modal-img {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  margin: 42px auto 0 auto;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.artist-modal .artist-modal-info {
+  padding: 34px 34px 28px 34px;
+}
+
+.artist-modal .artist-modal-stage {
+  display: inline-flex;
+  width: fit-content;
+  padding: 6px 9px;
+  border-radius: 8px;
+  background: rgba(247,211,123,0.10);
+  border: 1px solid rgba(247,211,123,0.24);
+  letter-spacing: 1px;
+  margin-bottom: 14px;
+}
+
+.artist-modal .artist-modal-artist {
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.artist-modal .artist-modal-track-title {
+  color: #fff;
+  font-weight: 800;
+  margin: 18px 0 2px 0;
+}
+
+.artist-modal .artist-modal-track-artist {
+  margin: 0;
+}
+
+.artist-modal .artist-modal-progress {
+  display: none !important;
+}
+
+.artist-modal .artist-modal-controls {
+  display: none !important;
+}
+
+.artist-modal .artist-modal-btn {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+}
+
+.artist-modal .artist-modal-btn-play {
+  background: linear-gradient(135deg, #f7d37b, #25d3ee);
+  color: #101014;
+  border: 0;
+}
+
+.artist-modal .artist-modal-btn:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+.artist-modal .artist-modal-footer {
+  margin-top: 8px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+}
+
+.spotify-embed-kicker {
+  color: rgba(247,211,123,0.95);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 10px 0;
+}
+
+.spotify-track-picker {
+  margin: 0 0 14px 0;
+}
+
+.spotify-track-chip {
+  border-radius: 999px;
+  padding: 9px 12px;
+}
+
+.spotify-search-panel {
+  min-height: 152px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.045);
+}
+
+@media (max-width: 760px) {
+  .artist-modal .artist-modal-body {
+    grid-template-columns: 1fr;
+  }
+
+  .artist-modal .artist-modal-album {
+    display: none !important;
+  }
+
+  .artist-modal .artist-modal-img {
+    max-width: 190px;
+    margin-top: 18px;
+  }
+
+  .artist-modal .artist-modal-info {
+    padding: 24px;
+  }
+
+  .artist-modal .artist-modal-artist {
+    font-size: 28px;
+  }
+
+  .spotify-search-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
 /* Animaciones */
 @keyframes fadeIn {
     from { opacity: 0; }

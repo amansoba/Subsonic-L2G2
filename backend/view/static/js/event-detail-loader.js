@@ -1,4 +1,5 @@
 import { getEventWithArtists } from './apiService.js';
+import { escapeHtml, getSpotifyTracksForArtist, serializeSpotifyTracks } from './spotify-tracks.js?v=festival-player-2';
 
 const getEventId = () => {
     const params = new URLSearchParams(window.location.search);
@@ -13,12 +14,25 @@ const renderArtistList = (artists, container) => {
     }
     container.innerHTML = '';
     artists.forEach(artist => {
-        const artistCard = document.createElement('a');
+        const spotifyTracks = getSpotifyTracksForArtist(artist);
+        const firstTrack = spotifyTracks[0];
+        const artistCard = document.createElement('div');
         artistCard.className = 'artist-card-small';
-        artistCard.href = `../events/artist.html?id=${artist.id}`;
         artistCard.innerHTML = `
-            <img src="${artist.photo || '../fotos_artistas/placeholder.jpg'}" alt="${artist.name}" />
-            <span>${artist.name}</span>
+            <img src="${escapeHtml(artist.photo || artist.image || '../fotos_artistas/placeholder.jpg')}" alt="${escapeHtml(artist.name)}" />
+            <span>${escapeHtml(artist.name)}</span>
+            <div class="right" style="margin-top:8px;">
+                <button
+                    class="btn secondary artist-card"
+                    type="button"
+                    data-artist="${escapeHtml(artist.name)}"
+                    data-stage="${escapeHtml(artist.genre)}"
+                    data-track="${escapeHtml(firstTrack?.name || 'Spotify')}"
+                    data-spotify-track-id="${escapeHtml(firstTrack?.id || '')}"
+                    data-spotify-tracks="${serializeSpotifyTracks(spotifyTracks)}"
+                >Escuchar</button>
+                <a class="btn secondary" href="../events/artist.html?id=${artist.id}">Ver</a>
+            </div>
         `;
         container.appendChild(artistCard);
     });

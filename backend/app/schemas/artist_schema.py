@@ -12,6 +12,9 @@ class ArtistRead(BaseModel):
     bio: str
     topTracks: List = []
     image: str = ""
+    spotifyTracks: List = []
+    spotifyTrackId: str | None = None
+    spotifyTrackName: str | None = None
 
 
 class ArtistCreate(BaseModel):
@@ -20,3 +23,6 @@ class ArtistCreate(BaseModel):
     bio: str = ""
     topTracks: List = []
     image: str = ""
+    spotifyTracks: List = []
+    spotifyTrackId: str | None = None
+    spotifyTrackName: str | None = None

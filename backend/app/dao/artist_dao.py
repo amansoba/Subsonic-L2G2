@@ -29,6 +29,9 @@ class InMemoryArtistDAO:
                 bio=item.get("bio", ""),
                 topTracks=item.get("topTracks", []),
                 image=item.get("image", ""),
+                spotifyTracks=item.get("spotifyTracks", []),
+                spotifyTrackId=item.get("spotifyTrackId"),
+                spotifyTrackName=item.get("spotifyTrackName"),
             )
             self._artists[artist.id] = artist
         self._next_id = max(self._artists.keys(), default=0) + 1
@@ -47,6 +50,9 @@ class InMemoryArtistDAO:
             bio=data.get("bio", ""),
             topTracks=data.get("topTracks", []),
             image=data.get("image", ""),
+            spotifyTracks=data.get("spotifyTracks", []),
+            spotifyTrackId=data.get("spotifyTrackId"),
+            spotifyTrackName=data.get("spotifyTrackName"),
         )
         self._artists[artist.id] = artist
         self._next_id += 1

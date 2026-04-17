@@ -14,7 +14,7 @@
   { "id": 13, "name": "ZHU", "genre": "Electrónica", "bio": "Productor y músico electrónico con sonido oscuro y seductor.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
   { "id": 14, "name": "Yaeji", "genre": "House", "bio": "Productora y DJ coreano-estadounidense con mezcla house y rap.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
   { "id": 15, "name": "The Rose", "genre": "Indie Rock", "bio": "Banda surcoreana con sensibilidad rock y melódica.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
-  { "id": 16, "name": "Rosalía", "genre": "Flamenco Urbano", "bio": "Artista española fusionando flamenco y sonidos urbanos.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
+  { "id": 16, "name": "Rosalía", "genre": "Flamenco Urbano", "bio": "Artista española fusionando flamenco y sonidos urbanos.", "topTracks": [], "spotifyTracks": [{ "id": "0Wdkz0eBGm5BIYc9K3n0vT", "name": "DESPECHA" }, { "id": "1B0BQaSRHxhI0AUlItY3LK", "name": "MALAMENTE" }, { "id": "4oVO4fGNRRvEn0CRuFO4qv", "name": "La Perla" }], "image": "../fotos_artistas/placeholder.jpg" },
   { "id": 17, "name": "The Strokes", "genre": "Indie Rock", "bio": "Banda neoyorquina seminal del rock alternativo.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
   { "id": 18, "name": "Bad Gyal", "genre": "Dancehall", "bio": "Artista española con influencias dancehall y dembow.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },
   { "id": 19, "name": "Tame Impala", "genre": "Psicodelia", "bio": "Proyecto de Kevin Parker, referente de la psicodelia moderna.", "topTracks": [], "image": "../fotos_artistas/placeholder.jpg" },

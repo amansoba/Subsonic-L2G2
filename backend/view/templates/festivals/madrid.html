@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subsonic Madrid — 2026</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=festival-player-3" />
 </head>
 <body data-page="festival-madrid" data-event-id="3">
 
@@ -258,7 +258,7 @@ ación, reembolsos y más.
 
 
 <script src="../js/data.js"></script>
-<script src="../js/app.js?v=nav-fix-1"></script>
+<script src="../js/app.js?v=nav-fix-2"></script>
 <!-- ====== ARTIST MODAL / PLAYER ====== -->
 <div id="artistModal" class="artist-modal" aria-hidden="true" role="dialog" aria-labelledby="artistModalTitle">
   <div class="artist-modal-overlay"></div>
@@ -268,16 +268,6 @@ ación, reembolsos y más.
     </button>
 
     <div class="artist-modal-body">
-      <!-- Album Art -->
-      <div class="artist-modal-album">
-        <img 
-          id="artistModalImg" 
-          alt="Album Art" 
-          class="artist-modal-img"
-          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Crect fill='%230b0b12' width='256' height='256'/%3E%3Ctext x='128' y='128' font-size='14' fill='%23666' text-anchor='middle' dy='.3em'%3EArtist Image%3C/text%3E%3C/svg%3E"
-        />
-      </div>
-
       <!-- Artist Info -->
       <div class="artist-modal-info">
         <div class="artist-modal-stage" id="artistModalStage">MAINSCAPE</div>
@@ -285,7 +275,7 @@ ación, reembolsos y más.
         
         <!-- Current Track (Hardcoded for now, ready for API) -->
         <div class="artist-modal-track">
-          <p class="artist-modal-track-title" id="artistModalTrackTitle">Live Set</p>
+          <p class="artist-modal-track-title" id="artistModalTrackTitle">Spotify</p>
           <p class="artist-modal-track-artist" id="artistModalTrackArtist">Artist Name</p>
         </div>
 
@@ -336,7 +326,7 @@ ación, reembolsos y más.
   </div>
 </div>
 
-<script src="../js/player-modal.js"></script>
-<script type="module" src="../js/festival-loader.js"></script>
+<script src="../js/player-modal.js?v=festival-player-6"></script>
+<script type="module" src="../js/festival-loader.js?v=festival-player-3"></script>
 </body>
 </html>

@@ -47,6 +47,9 @@ def get_event(event_id: int):
             "bio": a.bio,
             "topTracks": a.topTracks,
             "image": a.image,
+            "spotifyTracks": a.spotifyTracks,
+            "spotifyTrackId": a.spotifyTrackId,
+            "spotifyTrackName": a.spotifyTrackName,
         }
         for a in full_artists
     ]
