@@ -81,7 +81,7 @@ function renderNav(){
       links.push({ href:`${basePath}client/dashboard.html`, label:"Mi Cuenta" });
       links.push({ href:`${basePath}client/tickets.html`, label:"Mis Entradas" });
       links.push({ href:`${basePath}client/orders.html`, label:"Mis Pedidos" });
-      links.push({ href:"#", label: `${s.name || "Cliente"}`, action:"noop" });
+      links.push({ href:`${basePath}client/dashboard.html`, label: `${s.name || "Cliente"}` });
       links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
     } else if(s.role === "provider"){
       links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Espacios" });
@@ -106,6 +106,10 @@ function renderNav(){
         }
         window.location.href = basePath + "index.html";
       });
+    }
+
+    if(l.action === "noop"){
+      a.addEventListener("click", (e) => e.preventDefault());
     }
 
     nav.appendChild(a);
@@ -323,7 +327,7 @@ async function _onFirebaseLogin(firebaseUser) {
     );
     if (!res.ok) throw new Error('login failed');
     const profile = await res.json();
-    setSession({ id: profile.id, email: profile.email, role: profile.role, name: profile.name || firebaseUser.displayName || profile.email.split('@')[0] });
+    setSession({ id: profile.id, email: profile.email, role: profile.role, name: profile.name || firebaseUser.displayName || profile.email.split('@')[0], idToken: token });
     return profile;
   } catch (err) {
     console.error('Subsonic login error', err);
@@ -613,23 +617,34 @@ function pageProfile(){
   renderNav();
   requireRole(["client"]);
 
+  if ($("#name") && $("#email")) {
+    return;
+  }
+
   const s = getSession();
-  $("#pName").value = s.name || "";
-  $("#pEmail").value = s.email || "";
+  const nameInput = $("#pName");
+  const emailInput = $("#pEmail");
+  if (!nameInput || !emailInput) {
+    return;
+  }
+
+  nameInput.value = s.name || "";
+  emailInput.value = s.email || "";
 
   const form = $("#profileForm");
   if(form && !form.dataset.bound){
     form.dataset.bound = "1";
     form.addEventListener("submit",(e)=>{
       e.preventDefault();
-      s.name = ($("#pName").value || "").trim() || s.name;
+      s.name = (nameInput.value || "").trim() || s.name;
       setSession(s);
       alert("Cambios guardados (simulado).");
       window.location.href = basePath + "client/dashboard.html";
     });
   }
 
-  $("#backDash").href = `${basePath}client/dashboard.html`;
+  const backDash = $("#backDash");
+  if (backDash) backDash.href = `${basePath}client/dashboard.html`;
 }
 
 function pageProviderSpaces(){

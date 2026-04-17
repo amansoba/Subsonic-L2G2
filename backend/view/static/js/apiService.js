@@ -1,5 +1,44 @@
 import { config } from './config.js';
 
+export { config };
+
+const SESSION_KEY = 'subsonic_session';
+
+function _getStoredSession() {
+  return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+}
+
+function _storeSessionToken(token) {
+  const session = _getStoredSession();
+  if (!session || !token) return;
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ ...session, idToken: token }));
+}
+
+function _waitForFirebaseUser(timeoutMs = 3000) {
+  if (typeof firebase === 'undefined' || !firebase.auth) {
+    return Promise.resolve(null);
+  }
+
+  const auth = firebase.auth();
+  if (auth.currentUser) {
+    return Promise.resolve(auth.currentUser);
+  }
+
+  return new Promise((resolve) => {
+    let unsubscribe = null;
+    const timer = setTimeout(() => {
+      if (unsubscribe) unsubscribe();
+      resolve(auth.currentUser);
+    }, timeoutMs);
+
+    unsubscribe = auth.onAuthStateChanged((user) => {
+      clearTimeout(timer);
+      if (unsubscribe) unsubscribe();
+      resolve(user);
+    });
+  });
+}
+
 /**
  * Returns the current Firebase ID token for Authorization header, or null.
  * Uses the compat SDK (global ``firebase``).
@@ -7,10 +46,17 @@ import { config } from './config.js';
 async function _getAuthHeaders() {
   const headers = {};
   if (typeof firebase !== 'undefined' && firebase.auth) {
-    const user = firebase.auth().currentUser;
+    const user = await _waitForFirebaseUser();
     if (user) {
       const token = await user.getIdToken();
+      _storeSessionToken(token);
       headers['Authorization'] = `Bearer ${token}`;
+    }
+  }
+  if (!headers['Authorization']) {
+    const session = _getStoredSession();
+    if (session?.idToken) {
+      headers['Authorization'] = `Bearer ${session.idToken}`;
     }
   }
   return headers;
@@ -20,7 +66,7 @@ async function _getAuthHeaders() {
  * Wrapper around fetch that automatically injects the Authorization header
  * when using the real backend. Accepts the same arguments as ``fetch()``.
  */
-async function authFetch(url, options = {}) {
+export async function authFetch(url, options = {}) {
   const authHeaders = await _getAuthHeaders();
   options.headers = { ...(options.headers || {}), ...authHeaders };
   return fetch(url, options);
@@ -385,6 +431,58 @@ export const getAllUsers = async () => {
 };
 
 /**
+ * Fetches the currently authenticated user's profile.
+ * @returns {Promise<Object>} A promise that resolves to the current user object.
+ */
+export const getCurrentUserProfile = async () => {
+  if (config.USE_MOCK_BACKEND) {
+    const response = await fetch(config.MOCK_DATA_PATHS.users);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const users = await response.json();
+    const session = _getStoredSession();
+    const user = users.find(u => u.id === session?.id || u.email === session?.email);
+    if (!user) {
+      throw new Error('User not found in mock data.');
+    }
+    return user;
+  }
+
+  const response = await authFetch(`${config.API_BASE_URL}/me`);
+  if (!response.ok) {
+    const error = new Error(`HTTP error! status: ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+};
+
+/**
+ * Updates the currently authenticated user's profile.
+ * @param {{name?: string, email?: string}} data The fields to update.
+ * @returns {Promise<Object>} A promise that resolves to the updated user object.
+ */
+export const updateCurrentUserProfile = async (data) => {
+  if (config.USE_MOCK_BACKEND) {
+    const session = _getStoredSession() || {};
+    return { ...session, ...data };
+  }
+
+  const response = await authFetch(`${config.API_BASE_URL}/me`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    const error = new Error(`HTTP error! status: ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+};
+
+/**
  * Fetches a user profile by their ID.
  * @param {number} userId The ID of the user to fetch.
  * @returns {Promise<Object>} A promise that resolves to the user object.
@@ -406,6 +504,11 @@ export const getUserProfile = async (userId) => {
     }
     return user;
   } else {
+    const session = _getStoredSession();
+    if (session?.role !== 'admin' && String(session?.id) === String(userId)) {
+      return getCurrentUserProfile();
+    }
+
     console.log(`Using real backend for user ${userId}.`);
     const url = `${config.API_BASE_URL}/users/${userId}`;
     try {
