@@ -84,7 +84,8 @@ function renderNav(){
       links.push({ href:`${basePath}client/dashboard.html`, label: `${s.name || "Cliente"}` });
       links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
     } else if(s.role === "provider"){
-      links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Espacios" });
+      links.push({ href:`${basePath}spaces/provider-manage-spaces.html`, label:"Mis Espacios" });
+      links.push({ href:`${basePath}spaces/provider-spaces.html`, label:"Buscar Espacios" });
       links.push({ href:"#", label: `${s.name || "Proveedor"}`, action:"noop" });
       links.push({ href:"#", label:"Cerrar sesión", action:"logout" });
     }
@@ -337,7 +338,7 @@ async function _onFirebaseLogin(firebaseUser) {
 
 function _redirectByRole(role) {
   if (role === 'admin') window.location.href = basePath + 'admin/edit-event.html';
-  else if (role === 'provider') window.location.href = basePath + 'spaces/provider-spaces.html';
+  else if (role === 'provider') window.location.href = basePath + 'spaces/provider-manage-spaces.html';
   else window.location.href = basePath + 'client/dashboard.html';
 }
 
@@ -710,6 +711,20 @@ function pageProviderSpaces(){
   }
 
   render();
+}
+
+function pageProviderManageSpaces(){
+  renderNav();
+  requireRole(["provider"]);
+
+  // This page uses its own loader, so no additional logic needed here
+}
+
+function pageProviderCreateSpace(){
+  renderNav();
+  requireRole(["provider"]);
+
+  // This page uses its own loader, so no additional logic needed here
 }
 
 function pageSpaceDetail(){
@@ -1166,6 +1181,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     ticket: pageTicketDetail,
 
     providerSpaces: pageProviderSpaces,
+    providerManageSpaces: pageProviderManageSpaces,
+    providerCreateSpace: pageProviderCreateSpace,
     space: pageSpaceDetail,
     spaceRequest: pageSpaceRequest,
 

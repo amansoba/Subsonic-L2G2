@@ -7,6 +7,7 @@ from dataclasses import dataclass
 class Space:
     id: int
     eventId: int
+    provider_id: int
     type: str
     size: str
     location: str

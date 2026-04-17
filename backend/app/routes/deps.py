@@ -50,6 +50,15 @@ def require_admin(user: User = Depends(get_current_user)) -> User:
 
 
 def require_provider(user: User = Depends(get_current_user)) -> User:
+    if user.role != "provider":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Provider access required",
+        )
+    return user
+
+
+def require_provider(user: User = Depends(get_current_user)) -> User:
     if user.role not in ("admin", "provider"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
