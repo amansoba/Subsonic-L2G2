@@ -1336,111 +1336,269 @@ function pageProduct(){
 function pageCart(){
   renderNav();
 
-  const wrap = $("#cartList");
+  const ticketList = $("#ticketCartList");
+  const productList = $("#productCartList");
+  const emptyState = $("#cartEmptyState");
+  const checkoutContent = $("#checkoutContent");
+  const checkoutCopy = $("#checkoutCopy");
+  const ticketSection = $("#cartTicketsSection");
+  const productSection = $("#cartProductsSection");
+  const deliveryBlock = $("#deliveryBlock");
+  const ticketSubtotalEl = $("#ticketSubtotal");
+  const productSubtotalEl = $("#productSubtotal");
   const totalEl = $("#cartTotal");
-  if(!wrap || !totalEl) return;
+  const orderCodeEl = $("#cartOrderCode");
+  const checkoutNote = $("#checkoutNote");
+  if(!ticketList || !productList || !totalEl) return;
 
-  const cart = window.store.loadCart();
-  wrap.innerHTML = "";
-
-  let total = 0;
-
-  cart.forEach((it, idx)=>{
-    // Support product items and ticket items
-    if(it.type === 'ticket'){
-      const ev = it.eventId ? DB.events.find(x=>x.id===Number(it.eventId)) : null;
-      const pass = ev && it.passId ? ev.passes.find(p=>p.id===Number(it.passId)) : null;
-      const price = (it.price != null) ? it.price : (pass ? pass.price : 0);
-      const sub = price * (it.qty||0);
-      total += sub;
-
-      const eventTitle = ev ? ev.name : (it.eventName || 'Evento');
-      const passTitle = pass ? pass.name : (it.passName || 'Entrada');
-
-      const row = document.createElement('div');
-      row.className = 'card';
-      row.innerHTML = `
-        <div class="row" style="justify-content:space-between">
-          <div>
-            <div class="badge">${passTitle}</div>
-            <h3 class="h-title" style="margin:8px 0 4px 0">${eventTitle}</h3>
-            <p class="small">${money(price)} • Cantidad: ${it.qty}</p>
-          </div>
-          <div class="right">
-            <strong>${money(sub)}</strong>
-            <button class="btn danger" type="button">Quitar</button>
-          </div>
-        </div>
-      `;
-      row.querySelector('button').addEventListener('click', ()=>{
-        cart.splice(idx,1);
-        window.store.saveCart(cart);
-        pageCart();
-      });
-      wrap.appendChild(row);
-    } else if(it.productId){
-      const p = DB.products.find(x=>x.id===it.productId);
-      if(!p) return;
-      const sub = p.price * (it.qty||0);
-      total += sub;
-
-      const row = document.createElement('div');
-      row.className='card';
-      row.innerHTML = `
-        <div class="row" style="justify-content:space-between">
-          <div>
-            <div class="badge">Talla: ${it.size || '-'}</div>
-            <h3 class="h-title" style="margin:8px 0 4px 0">${p.name}</h3>
-            <p class="small">${money(p.price)} • Cantidad: ${it.qty}</p>
-          </div>
-          <div class="right">
-            <strong>${money(sub)}</strong>
-            <button class="btn danger" type="button">Quitar</button>
-          </div>
-        </div>
-      `;
-      row.querySelector('button').addEventListener('click', ()=>{
-        cart.splice(idx,1);
-        window.store.saveCart(cart);
-        pageCart();
-      });
-      wrap.appendChild(row);
+  const getCartTotals = (items) => items.reduce((acc, it) => {
+    if(it.type === "ticket"){
+      const ev = it.eventId ? DB.events.find(x => x.id === Number(it.eventId)) : null;
+      const pass = ev && it.passId ? ev.passes.find(p => p.id === Number(it.passId)) : null;
+      const price = it.price != null ? Number(it.price) : Number(pass?.price || 0);
+      acc.ticketTotal += price * (Number(it.qty) || 0);
+      acc.ticketQty += Number(it.qty) || 0;
+      return acc;
     }
+
+    if(it.productId){
+      const product = DB.products.find(x => x.id === it.productId);
+      const price = Number(product?.price || it.price || 0);
+      acc.productTotal += price * (Number(it.qty) || 0);
+      acc.productQty += Number(it.qty) || 0;
+    }
+
+    return acc;
+  }, { ticketTotal: 0, productTotal: 0, ticketQty: 0, productQty: 0 });
+
+  const updateCartQty = (index, nextQty) => {
+    const nextCart = window.store.loadCart();
+    const qty = Math.max(1, Number(nextQty) || 1);
+    if(!nextCart[index]) return;
+    nextCart[index].qty = qty;
+    window.store.saveCart(nextCart);
+    pageCart();
+  };
+
+  const removeCartItem = (index) => {
+    const nextCart = window.store.loadCart();
+    nextCart.splice(index, 1);
+    window.store.saveCart(nextCart);
+    pageCart();
+  };
+
+  const attachQtyControls = (row, index, qty) => {
+    const input = row.querySelector(".qty-input");
+    row.querySelector(".qty-minus")?.addEventListener("click", () => updateCartQty(index, Math.max(1, qty - 1)));
+    row.querySelector(".qty-plus")?.addEventListener("click", () => updateCartQty(index, qty + 1));
+    input?.addEventListener("change", () => updateCartQty(index, input.value));
+    row.querySelector(".remove-item")?.addEventListener("click", () => removeCartItem(index));
+  };
+
+  const renderTicketItem = (it, idx) => {
+    const ev = it.eventId ? DB.events.find(x => x.id === Number(it.eventId)) : null;
+    const pass = ev && it.passId ? ev.passes.find(p => p.id === Number(it.passId)) : null;
+    const price = it.price != null ? Number(it.price) : Number(pass?.price || 0);
+    const qty = Math.max(1, Number(it.qty) || 1);
+    const sub = price * qty;
+    const eventTitle = ev ? ev.name : (it.eventName || "Evento Subsonic");
+    const passTitle = pass ? pass.name : (it.passName || "Entrada");
+    const eventPlace = ev ? `${ev.venue}, ${ev.city}` : "Recinto por confirmar";
+    const eventDate = ev?.date ? formatDate(ev.date) : "Fecha por confirmar";
+    const row = document.createElement("article");
+    row.className = "checkout-item";
+    row.innerHTML = `
+      <div>
+        <div class="badge">${htmlEscape(passTitle)}</div>
+        <div class="checkout-item-title">${htmlEscape(eventTitle)}</div>
+        <div class="checkout-item-meta">
+          <span>${htmlEscape(eventDate)}</span>
+          <span>${htmlEscape(eventPlace)}</span>
+          <span>${money(price)} unidad</span>
+        </div>
+      </div>
+      <div class="checkout-item-actions">
+        <strong>${money(sub)}</strong>
+        <div class="qty-control" aria-label="Cantidad de ${htmlEscape(eventTitle)}">
+          <button class="qty-minus" type="button" aria-label="Restar entrada">-</button>
+          <input class="qty-input" type="number" min="1" value="${qty}" aria-label="Cantidad">
+          <button class="qty-plus" type="button" aria-label="Sumar entrada">+</button>
+        </div>
+        <button class="btn danger remove-item" type="button">Quitar</button>
+      </div>
+    `;
+    attachQtyControls(row, idx, qty);
+    ticketList.appendChild(row);
+  };
+
+  const renderProductItem = (it, idx) => {
+    const product = DB.products.find(x => x.id === it.productId);
+    if(!product) return;
+    const qty = Math.max(1, Number(it.qty) || 1);
+    const price = Number(product.price || it.price || 0);
+    const sub = price * qty;
+    const row = document.createElement("article");
+    row.className = "checkout-item";
+    row.innerHTML = `
+      <div>
+        <div class="badge">Talla ${htmlEscape(it.size || "-")}</div>
+        <div class="checkout-item-title">${htmlEscape(product.name)}</div>
+        <div class="checkout-item-meta">
+          <span>${htmlEscape(product.category || "Merchandising")}</span>
+          <span>${money(price)} unidad</span>
+          <span>Entrega estimada 2-3 días</span>
+        </div>
+      </div>
+      <div class="checkout-item-actions">
+        <strong>${money(sub)}</strong>
+        <div class="qty-control" aria-label="Cantidad de ${htmlEscape(product.name)}">
+          <button class="qty-minus" type="button" aria-label="Restar producto">-</button>
+          <input class="qty-input" type="number" min="1" value="${qty}" aria-label="Cantidad">
+          <button class="qty-plus" type="button" aria-label="Sumar producto">+</button>
+        </div>
+        <button class="btn danger remove-item" type="button">Quitar</button>
+      </div>
+    `;
+    attachQtyControls(row, idx, qty);
+    productList.appendChild(row);
+  };
+
+  const hydrateDeliveryForm = () => {
+    if(!deliveryBlock || deliveryBlock.dataset.hydrated) return;
+    deliveryBlock.dataset.hydrated = "1";
+    const s = getSession() || {};
+    let saved = {};
+    try{ saved = JSON.parse(localStorage.getItem("subsonic_checkout_delivery") || "{}"); }catch(e){}
+    $("#deliveryName").value = saved.name || s.name || "";
+    $("#deliveryPhone").value = saved.phone || "";
+    $("#deliveryAddress").value = saved.address || "";
+    $("#deliveryCity").value = saved.city || "";
+    $("#deliveryZip").value = saved.zip || "";
+  };
+
+  const readDeliveryForm = () => ({
+    name: ($("#deliveryName")?.value || "").trim(),
+    phone: ($("#deliveryPhone")?.value || "").trim(),
+    address: ($("#deliveryAddress")?.value || "").trim(),
+    city: ($("#deliveryCity")?.value || "").trim(),
+    zip: ($("#deliveryZip")?.value || "").trim()
   });
 
+  const cart = window.store.loadCart();
+  const ticketsForCart = cart.filter(i => i.type === "ticket");
+  const productsForOrder = cart.filter(i => i.productId);
+  const totals = getCartTotals(cart);
+  const total = totals.ticketTotal + totals.productTotal;
+  const hasTickets = ticketsForCart.length > 0;
+  const hasProducts = productsForOrder.length > 0;
+
+  if(cart.length === 0){
+    if(emptyState) emptyState.hidden = false;
+    if(checkoutContent) checkoutContent.hidden = true;
+    localStorage.removeItem("subsonic_cart_draft_id");
+    return;
+  }
+
+  if(emptyState) emptyState.hidden = true;
+  if(checkoutContent) checkoutContent.hidden = false;
+  if(ticketSection) ticketSection.hidden = !hasTickets;
+  if(productSection) productSection.hidden = !hasProducts;
+  if(deliveryBlock) deliveryBlock.hidden = !hasProducts;
+
+  ticketList.innerHTML = "";
+  productList.innerHTML = "";
+  cart.forEach((it, idx) => {
+    if(it.type === "ticket") renderTicketItem(it, idx);
+    if(it.productId) renderProductItem(it, idx);
+  });
+
+  if(checkoutCopy){
+    checkoutCopy.textContent = hasTickets && hasProducts
+      ? "Recibirás las entradas al instante y el pedido de tienda con entrega estimada."
+      : hasTickets
+        ? "Tus entradas se guardarán en Mis entradas tras confirmar la compra."
+        : "Tu pedido aparecerá en Mis pedidos con seguimiento y entrega estimada.";
+  }
+
+  let draftId = localStorage.getItem("subsonic_cart_draft_id");
+  if(!draftId){
+    draftId = `SUB-${String(Date.now()).slice(-8)}`;
+    localStorage.setItem("subsonic_cart_draft_id", draftId);
+  }
+
+  if(orderCodeEl) orderCodeEl.textContent = `Pedido ${draftId}`;
+  if(ticketSubtotalEl) ticketSubtotalEl.textContent = money(totals.ticketTotal);
+  if(productSubtotalEl) productSubtotalEl.textContent = money(totals.productTotal);
   totalEl.textContent = money(total);
+  if(checkoutNote){
+    checkoutNote.textContent = hasTickets && hasProducts
+      ? "Entradas digitales al instante. Envío estándar incluido para tienda."
+      : hasTickets
+        ? "Las entradas estarán disponibles al instante en tu perfil."
+        : "Envío estándar incluido y seguimiento guardado en Mis pedidos.";
+  }
+
+  hydrateDeliveryForm();
+
+  document.querySelectorAll(".payment-option").forEach(option => {
+    option.onchange = () => {
+      document.querySelectorAll(".payment-option").forEach(item => item.classList.toggle("active", item.querySelector("input")?.checked));
+    };
+  });
+
+  const clearCart = $("#clearCart");
+  if(clearCart){
+    clearCart.onclick = () => {
+      if(confirm("¿Vaciar todo el carrito?")){
+        window.store.saveCart([]);
+        localStorage.removeItem("subsonic_cart_draft_id");
+        pageCart();
+      }
+    };
+  }
 
   const checkout = $("#checkout");
-  if(checkout && !checkout.dataset.bound){
-    checkout.dataset.bound="1";
-    checkout.addEventListener("click", async ()=>{
+  if(checkout){
+    checkout.onclick = async () => {
       const s = getSession();
       if(!s || s.role !== "client"){
         alert("Necesitas iniciar sesión como Cliente para comprar.");
         window.location.href = basePath + "auth/login.html";
         return;
       }
-      if(cart.length === 0){
+
+      const currentCart = window.store.loadCart();
+      const currentTotals = getCartTotals(currentCart);
+      const currentTotal = currentTotals.ticketTotal + currentTotals.productTotal;
+      const currentProducts = currentCart.filter(i => i.productId);
+      const currentTickets = currentCart.filter(i => i.type === "ticket");
+      if(currentCart.length === 0){
         alert("Carrito vacío.");
         return;
       }
-      // Simulate a minimal payment step
-      const proceed = confirm(`Total a pagar: ${money(total)}\n\nSimular pago con tarjeta?`);
+
+      const delivery = readDeliveryForm();
+      if(currentProducts.length && (!delivery.name || !delivery.address || !delivery.city || !delivery.zip)){
+        alert("Completa nombre, dirección, ciudad y código postal para enviar el pedido.");
+        return;
+      }
+      if(currentProducts.length){
+        localStorage.setItem("subsonic_checkout_delivery", JSON.stringify(delivery));
+      }
+
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value || "card";
+      const proceed = confirm(`Total a pagar: ${money(currentTotal)}\n\n¿Confirmar compra?`);
       if(!proceed) return;
 
-      // Process cart: create tickets for ticket items, and an order for product items
       const orders = window.store.loadOrders();
-      const productsForOrder = cart.filter(i=>i.productId);
-      const ticketsForCart = cart.filter(i=>i.type==='ticket');
-
       const createdOrderIds = [];
       const createdTicketIds = [];
       const apiWarnings = [];
 
-      if(productsForOrder.length){
+      if(currentProducts.length){
         const oid = Date.now();
         const deliveryDays = randomDeliveryDays();
-        const orderTotal = productsForOrder.reduce((sum, item) => {
+        const orderTotal = currentProducts.reduce((sum, item) => {
           const product = DB.products.find(p => p.id === item.productId);
           return sum + ((product?.price || 0) * (item.qty || 0));
         }, 0);
@@ -1453,18 +1611,19 @@ function pageCart(){
           trackingCode: `SUBSHOP-${String(oid).slice(-8)}`,
           status: "Preparando pedido",
           total: orderTotal,
-          items: productsForOrder
+          paymentMethod,
+          shippingMethod: "Envío estándar",
+          deliveryAddress: delivery,
+          items: currentProducts
         });
         createdOrderIds.push(oid);
       }
 
-      // Create ticket entries for each ticket item. With a valid backend
-      // session, create them remotely first and mirror the result locally.
-      for(const ti of ticketsForCart){
-        const ev = ti.eventId ? DB.events.find(e=>e.id === Number(ti.eventId)) : null;
-        const pass = (ev && ti.passId) ? ev.passes.find(p=>p.id === Number(ti.passId)) : null;
+      for(const ti of currentTickets){
+        const ev = ti.eventId ? DB.events.find(e => e.id === Number(ti.eventId)) : null;
+        const pass = ev && ti.passId ? ev.passes.find(p => p.id === Number(ti.passId)) : null;
         const qty = Math.max(1, Number(ti.qty) || 1);
-        for(let i=0;i<qty;i++){
+        for(let i = 0; i < qty; i++){
           let remoteTicket = null;
           if(ti.eventId && ti.passId){
             try {
@@ -1476,13 +1635,13 @@ function pageCart(){
           }
 
           const localTicket = upsertLocalTicket(remoteTicket || {
-            id: Date.now() + Math.floor(Math.random()*1000) + i,
+            id: Date.now() + Math.floor(Math.random() * 1000) + i,
             userId: s.id || null,
             userEmail: s.email,
             eventId: ti.eventId ? Number(ti.eventId) : null,
             passId: ti.passId ? Number(ti.passId) : null,
             eventName: ev ? ev.name : (ti.eventName || null),
-            passName: pass ? pass.name : (ti.passName || 'Entrada'),
+            passName: pass ? pass.name : (ti.passName || "Entrada"),
             passPrice: pass?.price ?? ti.price ?? 0,
             purchaseDate: toLocalISODate(),
             status: "Activa"
@@ -1491,29 +1650,28 @@ function pageCart(){
         }
       }
 
-      // Persist
       window.store.saveOrders(orders);
       window.store.saveCart([]);
       window.saveTickets?.();
 
-      // Save a purchase summary for the UI
       const lastPurchase = {
         id: Date.now(),
         userEmail: s.email,
         date: toLocalISODate(),
-        total: total,
+        total: currentTotal,
         orders: createdOrderIds,
         tickets: createdTicketIds
       };
-      try{ localStorage.setItem('subsonic_last_purchase', JSON.stringify(lastPurchase)); }catch(e){}
+      try{ localStorage.setItem("subsonic_last_purchase", JSON.stringify(lastPurchase)); }catch(e){}
+      localStorage.removeItem("subsonic_cart_draft_id");
 
       if(apiWarnings.length){
-        alert('Compra confirmada: entradas guardadas en este navegador. Cuando haya sesión de servidor válida, también se guardarán en tu perfil online.');
+        alert("Compra confirmada: entradas guardadas en este navegador. Cuando haya sesión de servidor válida, también se guardarán en tu perfil online.");
       } else {
-        alert('Compra confirmada: entradas y pedidos procesados.');
+        alert("Compra confirmada: entradas y pedidos procesados.");
       }
       window.location.href = `${basePath}client/purchase-summary.html?id=${lastPurchase.id}`;
-    });
+    };
   }
 }
 

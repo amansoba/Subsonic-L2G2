@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Subsonic — Carrito</title>
-  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="stylesheet" href="../css/styles.css?v=checkout-1" />
 </head>
 <body data-page="cart">
 
@@ -15,30 +15,123 @@
   </div>
 </header>
 
-<main class="container">
-  <div class="card">
-    <h1 class="h-title" style="margin:0">Carrito</h1>
-    <p class="small">Revisa tus productos y entradas antes de confirmar la compra.</p>
-
-    <div class="hr"></div>
-
-    <div id="cartList" class="grid"></div>
-
-    <div class="hr"></div>
-
-    <div class="row" style="justify-content:space-between">
-      <strong>Total:</strong>
-      <strong id="cartTotal">€0.00</strong>
+<main class="container checkout-page">
+  <section class="checkout-header">
+    <div>
+      <div class="badge">Checkout</div>
+      <h1 class="h-title">Carrito</h1>
+      <p class="small" id="checkoutCopy">Revisa tus productos y entradas antes de confirmar la compra.</p>
     </div>
+    <a class="btn secondary" href="store.html">Seguir comprando</a>
+  </section>
 
-    <div class="right" style="margin-top:12px">
-      <a class="btn secondary" href="store.html">Seguir comprando</a>
-      <button class="btn" id="checkout" type="button">Pagar</button>
-    </div>
+  <div id="cartEmptyState" class="checkout-empty" hidden>
+    <h2 class="h-title">Tu carrito está vacío</h2>
+    <p class="small">Añade entradas o productos de tienda para continuar con la compra.</p>
+    <a class="btn" href="store.html">Ver tienda</a>
   </div>
+
+  <section id="checkoutContent" class="checkout-layout">
+    <div class="checkout-main">
+      <section id="cartTicketsSection" class="checkout-section">
+        <div class="checkout-section-head">
+          <div>
+            <span class="checkout-step">1</span>
+            <h2 class="h-title">Entradas</h2>
+          </div>
+          <p class="small">Se guardarán en Mis entradas al completar la compra.</p>
+        </div>
+        <div id="ticketCartList" class="checkout-items"></div>
+      </section>
+
+      <section id="cartProductsSection" class="checkout-section">
+        <div class="checkout-section-head">
+          <div>
+            <span class="checkout-step">2</span>
+            <h2 class="h-title">Tienda</h2>
+          </div>
+          <p class="small">El pedido aparecerá en Mis pedidos con seguimiento y entrega estimada.</p>
+        </div>
+        <div id="productCartList" class="checkout-items"></div>
+      </section>
+
+      <section id="deliveryBlock" class="checkout-section">
+        <div class="checkout-section-head">
+          <div>
+            <span class="checkout-step">3</span>
+            <h2 class="h-title">Entrega</h2>
+          </div>
+          <p class="small">Entrega estándar estimada en 2 o 3 días.</p>
+        </div>
+        <div class="checkout-form-grid">
+          <label class="field-label">Nombre completo
+            <input id="deliveryName" class="field" type="text" autocomplete="name">
+          </label>
+          <label class="field-label">Teléfono
+            <input id="deliveryPhone" class="field" type="tel" autocomplete="tel">
+          </label>
+          <label class="field-label field-wide">Dirección
+            <input id="deliveryAddress" class="field" type="text" autocomplete="street-address">
+          </label>
+          <label class="field-label">Ciudad
+            <input id="deliveryCity" class="field" type="text" autocomplete="address-level2">
+          </label>
+          <label class="field-label">Código postal
+            <input id="deliveryZip" class="field" type="text" inputmode="numeric" autocomplete="postal-code">
+          </label>
+        </div>
+      </section>
+
+      <section class="checkout-section">
+        <div class="checkout-section-head">
+          <div>
+            <span class="checkout-step">4</span>
+            <h2 class="h-title">Pago</h2>
+          </div>
+          <p class="small">Método seleccionado para esta compra.</p>
+        </div>
+        <div class="payment-options" role="radiogroup" aria-label="Método de pago">
+          <label class="payment-option active">
+            <input type="radio" name="paymentMethod" value="card" checked>
+            <span>
+              <strong>Tarjeta bancaria</strong>
+              <small>Terminada en 4242</small>
+            </span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="wallet">
+            <span>
+              <strong>Monedero Subsonic</strong>
+              <small>Disponible al confirmar</small>
+            </span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <aside class="checkout-summary-panel" aria-label="Resumen de compra">
+      <div class="badge" id="cartOrderCode">Pedido pendiente</div>
+      <h2 class="h-title">Resumen</h2>
+      <div class="summary-lines">
+        <div><span>Entradas</span><strong id="ticketSubtotal">€0.00</strong></div>
+        <div><span>Tienda</span><strong id="productSubtotal">€0.00</strong></div>
+        <div><span>Gastos de gestión</span><strong id="serviceFees">Incluidos</strong></div>
+        <div><span>Envío estándar</span><strong id="shippingFees">Incluido</strong></div>
+      </div>
+      <div class="summary-total">
+        <span>Total</span>
+        <strong id="cartTotal">€0.00</strong>
+      </div>
+      <p class="small" id="checkoutNote">Las entradas estarán disponibles al instante.</p>
+      <div class="checkout-actions">
+        <button class="btn" id="checkout" type="button">Confirmar compra</button>
+        <button class="btn secondary" id="clearCart" type="button">Vaciar carrito</button>
+      </div>
+    </aside>
+  </section>
 </main>
 
 <script src="../js/data.js"></script>
-<script src="../js/app.js?v=nav-fix-8"></script>
+<script src="../js/app.js?v=nav-fix-9"></script>
 </body>
 </html>
