@@ -110,16 +110,26 @@ class InMemoryUserDAO:
         firebase_uid: str,
         email: str,
         full_name: Optional[str],
+        requested_role: Optional[str] = None,
         default_role: str = "client",
     ) -> User:
         # Determine effective role: admin whitelist takes priority
-        effective_role = "admin" if _is_admin_email(email) else default_role
+        # If requested_role is provided, use it, otherwise use existing or default
+        base_role = requested_role or default_role
+        effective_role = "admin" if _is_admin_email(email) else base_role
 
         existing = self.get_by_firebase_uid(firebase_uid)
         if existing:
             existing.email = email
-            existing.full_name = full_name
-            existing.role = effective_role
+            # Only update full_name if provided
+            if full_name:
+                existing.full_name = full_name
+            
+            # Only update role if explicitly requested (registration)
+            # or if the user is an admin
+            if requested_role or effective_role == "admin":
+                existing.role = effective_role
+            
             self._users_by_email[email] = existing
             return existing
         user = User(

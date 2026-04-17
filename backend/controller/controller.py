@@ -93,7 +93,15 @@ def render_html_pages(full_path: str, request: Request):
     # Guard admin views — only users with the "admin" role cookie may access
     if full_path.startswith("admin/"):
         role = request.cookies.get("subsonic_role", "")
+        print(f"[DEBUG] Accessing admin view: {full_path}, role in cookie: '{role}'")
         if role != "admin":
+            return RedirectResponse(url="/auth/login.html", status_code=302)
+
+    # Guard provider views — only users with "provider" or "admin" role
+    if full_path.startswith("spaces/"):
+        role = request.cookies.get("subsonic_role", "")
+        print(f"[DEBUG] Accessing provider view: {full_path}, role in cookie: '{role}'")
+        if role not in ["provider", "admin"]:
             return RedirectResponse(url="/auth/login.html", status_code=302)
 
     return templates.TemplateResponse(full_path, {"request": request})

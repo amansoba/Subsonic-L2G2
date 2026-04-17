@@ -14,6 +14,7 @@ router = APIRouter(prefix="/api", tags=["users"])
 
 class LoginRequest(BaseModel):
     id_token: str
+    role: Optional[str] = None
 
 
 def _user_to_read(user) -> UserRead:
@@ -34,7 +35,7 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
     it as ``Authorization: Bearer <token>`` on subsequent requests.
     """
     try:
-        user = user_controller.login(payload.id_token)
+        user = user_controller.login(payload.id_token, payload.role)
     except Exception as exc:
         import logging
         logging.getLogger("subsonic.login").exception("Login failed: %s", exc)
@@ -47,7 +48,6 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
         key="subsonic_role",
         value=user.role,
         path="/",
-        httponly=True,
         samesite="lax",
         max_age=60 * 60 * 24 * 7,  # 7 days
     )

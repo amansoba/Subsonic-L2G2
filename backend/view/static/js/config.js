@@ -1,6 +1,6 @@
 export const config = {
   USE_MOCK_BACKEND: false,
-  API_BASE_URL: 'http://localhost:8000/api',
+  API_BASE_URL: '/api',
   MOCK_DATA_PATHS: {
     events: '../mocks/events.json',
     artists: '../mocks/artists.json',

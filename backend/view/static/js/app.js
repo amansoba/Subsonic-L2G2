@@ -318,12 +318,19 @@ function _firebaseInitialised() {
 
 /** After successful Firebase sign-in, fetch the user profile from the backend
  *  and store it in localStorage for role-based navigation. */
-async function _onFirebaseLogin(firebaseUser) {
+async function _onFirebaseLogin(firebaseUser, requestedRole = null) {
   const token = await firebaseUser.getIdToken();
   try {
+    const payload = { id_token: token };
+    if (requestedRole) payload.role = requestedRole;
+
     const res = await fetch(
-      (window.__SUBSONIC_API || 'http://localhost:8000/api') + '/login',
-      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id_token: token }) }
+      (window.__SUBSONIC_API || '/api') + '/login',
+      { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify(payload) 
+      }
     );
     if (!res.ok) throw new Error('login failed');
     const profile = await res.json();
@@ -419,6 +426,8 @@ function pageRegister(){
     const email = ($("#regEmail")?.value || "").trim();
     const password = ($("#regPassword")?.value || "");
 
+    const role = ($('input[name="regRole"]:checked')?.value || "client");
+
     if (!_firebaseInitialised()) {
       alert("Firebase no disponible. Registro no posible.");
       return;
@@ -427,8 +436,10 @@ function pageRegister(){
     try {
       const cred = await firebase.auth().createUserWithEmailAndPassword(email, password);
       if (name) await cred.user.updateProfile({ displayName: name });
-      const profile = await _onFirebaseLogin(cred.user);
-      window.location.href = basePath + "client/dashboard.html";
+      const profile = await _onFirebaseLogin(cred.user, role);
+      if (profile) {
+        _redirectByRole(profile.role || role);
+      }
     } catch(err) {
       alert("Error: " + err.message);
     }
@@ -440,11 +451,14 @@ function pageRegister(){
     googleBtn.dataset.bound = "1";
     googleBtn.addEventListener("click", async () => {
       if (!_firebaseInitialised()) return;
+      const role = ($('input[name="regRole"]:checked')?.value || "client");
       try {
         const provider = new firebase.auth.GoogleAuthProvider();
         const cred = await firebase.auth().signInWithPopup(provider);
-        await _onFirebaseLogin(cred.user);
-        window.location.href = basePath + "client/dashboard.html";
+        const profile = await _onFirebaseLogin(cred.user, role);
+        if (profile) {
+          _redirectByRole(profile.role || role);
+        }
       } catch(err) {
         alert("Error: " + err.message);
       }

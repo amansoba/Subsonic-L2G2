@@ -72,22 +72,33 @@ class FirestoreUserDAO:
         firebase_uid: str,
         email: str,
         full_name: Optional[str],
+        requested_role: Optional[str] = None,
         default_role: str = "client",
     ) -> User:
         log.info("UPSERT user firebase_uid=%s email=%s", firebase_uid, email)
 
         # Determine effective role: admin whitelist takes priority
-        effective_role = "admin" if _is_admin_email(email) else default_role
+        # If requested_role is provided, use it, otherwise use existing or default
+        base_role = requested_role or default_role
+        effective_role = "admin" if _is_admin_email(email) else base_role
 
         existing = self.get_by_firebase_uid(firebase_uid)
         if existing:
             log.info("  → updating existing user id=%s", existing.id)
+            updates = {"email": email}
             existing.email = email
-            existing.full_name = full_name
-            existing.role = effective_role
-            db.collection(self._collection).document(str(existing.id)).update(
-                {"email": email, "full_name": full_name, "role": effective_role}
-            )
+            
+            if full_name:
+                existing.full_name = full_name
+                updates["full_name"] = full_name
+            
+            # Only update role if explicitly requested (registration)
+            # or if the user is an admin
+            if requested_role or effective_role == "admin":
+                existing.role = effective_role
+                updates["role"] = effective_role
+            
+            db.collection(self._collection).document(str(existing.id)).update(updates)
             return existing
 
         uid = next_id(self._collection)

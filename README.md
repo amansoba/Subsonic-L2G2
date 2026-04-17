@@ -10,27 +10,27 @@ El proyecto ha sido refactorizado desde una versión original puramente frontend
 
 ## Características
 
-El proyecto ofrece distintas funcionalidades según el rol del usuario que esté interactuando con el sistema (visitante, cliente, proveedor o administrador).
+El proyecto ofrece distintas funcionalidades según el rol del usuario que esté interactuando con el sistema (visitante, cliente, proveedor o administrador). La elección de rol se realiza durante el proceso de registro.
 
-### Funcionalidades Públicas
+### Funcionalidades Públicas (Visitante/Cualquier rol)
 * **Página de Inicio**: Presenta los próximos festivales destacados.
-* **Festivales y Eventos**: Lista completa de todos los eventos con opciones de búsqueda y filtrado.
-* **Detalle de Evento**: Muestra información detallada de una fecha de festival, incluyendo artistas y entradas.
-* **Artistas**: Página para explorar los artistas que participan en los festivales.
-* **Tienda**: Catálogo de productos de merchandising.
-* **Autenticación**: Inicio de sesión (Login) y Registro conectados de forma eficiente al backend y Firebase.
+* **Festivales y Eventos**: Lista completa de todos los eventos con búsqueda y filtrado.
+* **Detalle de Evento**: Información sobre artistas, pases y compra directa.
+* **Artistas**: Directorio de músicos participantes.
+* **Tienda**: Merchandising oficial de Subsonic.
+* **Autenticación**: Registro y Login integrado con Firebase.
 
 ### Panel de Cliente (`/client/...`)
 * **Dashboard Personal**: Un resumen de la actividad del cliente.
-* **Mis Entradas**: Lista de las entradas adquiridas por el usuario, con códigos QR (simulados/asignados).
+* **Mis Entradas**: Lista de las entradas adquiridas por el usuario.
 * **Mis Pedidos**: Historial de comprobantes de compras realizadas en la tienda.
 * **Perfil**: Permite al usuario editar sus datos personales.
 
 ### Panel de Proveedor (`/spaces/...`)
-* **Gestión de Espacios**: Para que los proveedores soliciten el alquiler de espacios en festivales (ejemplo: concesiones alimentarias, stands de marcas temporales).
+* **Gestión de Espacios**: Los proveedores pueden gestionar sus solicitudes de alquiler de espacios en festivales, ver fichas técnicas y realizar nuevas peticiones. El acceso está restringido exclusivamente a usuarios con rol `provider` o `admin`.
 
 ### Panel de Administración (`/admin/...`)
-* Interfaz dedicada para realizar la gestión completa de eventos (Eventos, Sesiones), artistas, productos, espacios, usuarios y roles a través de las operaciones que conectan con la DB en el backend.
+* Interfaz dedicada para la gestión completa de eventos, artistas, productos, espacios, usuarios y roles. Requiere privilegios de administrador, asignados mediante una lista blanca de correos electrónicos.
 
 ## Tecnologías Utilizadas
 
