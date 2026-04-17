@@ -90,6 +90,22 @@
     spotifyEmbedRequestId += 1;
   }
 
+  function stopSpotifyPlayback(){
+    destroySpotifyController();
+
+    const host = document.getElementById('spotifyEmbedHost');
+    if(host){
+      host.querySelectorAll('iframe').forEach(iframe => {
+        iframe.src = 'about:blank';
+        iframe.remove();
+      });
+      resetSpotifyEmbedHost(host);
+    }
+
+    currentTracks = [];
+    currentTrackIndex = 0;
+  }
+
   function resetSpotifyEmbedHost(host){
     if(!host) return null;
     host.innerHTML = '<div id="spotifyEmbedMount" style="width:100%; min-height:152px;"></div>';
@@ -244,7 +260,7 @@
   function closeArtistModal(){
     const modal = document.getElementById('artistModal');
     if(!modal) return;
-    destroySpotifyController();
+    stopSpotifyPlayback();
     modal.setAttribute('aria-hidden','true');
     document.body.style.overflow = '';
   }
@@ -268,6 +284,8 @@
       if(e.key !== 'Escape') return;
       closeArtistModal();
     });
+
+    window.addEventListener('pagehide', stopSpotifyPlayback);
 
     document.addEventListener('click', function(e){
       const chip = e.target.closest('.spotify-track-chip');

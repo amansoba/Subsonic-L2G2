@@ -38,7 +38,7 @@ const renderArtistList = (artists, container) => {
     });
 };
 
-const renderPassList = (passes, container) => {
+const renderPassList = (passes, container, eventId) => {
     if (!passes || passes.length === 0) {
         container.innerHTML = '<p class="small">No hay pases disponibles.</p>';
         return;
@@ -53,7 +53,7 @@ const renderPassList = (passes, container) => {
                 <span class="pass-price">${pass.price} €</span>
             </div>
             <p class="small">${pass.includes}</p>
-            <a href="../events/tickets-purchase.html?passId=${pass.id}" class="btn small-btn">Comprar</a>
+            <a href="../events/tickets-purchase.html?eventId=${eventId}&passId=${pass.id}" class="btn small-btn">Comprar</a>
         `;
         container.appendChild(passCard);
     });
@@ -81,7 +81,7 @@ const renderEvent = (event) => {
     renderArtistList(event.fullArtists, artistListContainer);
     
     const passListContainer = document.getElementById('passList');
-    renderPassList(event.passes, passListContainer);
+    renderPassList(event.passes, passListContainer, event.id);
 };
 
 const loadEventPage = async () => {
