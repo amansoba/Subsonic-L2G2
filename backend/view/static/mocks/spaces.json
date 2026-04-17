@@ -1,6 +1,6 @@
 [
-    { "id": 1, "eventId": 1, "provider_id": 2, "type": "Food Truck", "size": "10x10m", "location": "Zona Comida", "pricePerDay": 100, "status": "Disponible", "services": "Electricidad, agua", "notes": "Acceso cercano a público" },
-    { "id": 2, "eventId": 1, "provider_id": 2, "type": "Merch Stand", "size": "5x3m", "location": "Zona Merch", "pricePerDay": 80, "status": "Reservado", "services": "Electricidad", "notes": "Espacio interior" },
-    { "id": 3, "eventId": 2, "provider_id": 3, "type": "Bebidas", "size": "6x4m", "location": "Zona Chill", "pricePerDay": 70, "status": "Disponible", "services": "Electricidad", "notes": "Cerca de baños" },
-    { "id": 4, "eventId": 3, "provider_id": 3, "type": "Food Truck", "size": "12x8m", "location": "Entrada Norte", "pricePerDay": 120, "status": "Disponible", "services": "Electricidad, agua", "notes": "Zona tránsito" }
+    { "id": 1, "eventId": 1, "type": "Food Truck", "size": "10x10m", "location": "Zona Comida", "pricePerDay": 100, "status": "Disponible", "services": "Electricidad, agua", "notes": "Acceso cercano a público" },
+    { "id": 2, "eventId": 1, "type": "Merch Stand", "size": "5x3m", "location": "Zona Merch", "pricePerDay": 80, "status": "Reservado", "services": "Electricidad", "notes": "Espacio interior" },
+    { "id": 3, "eventId": 2, "type": "Bebidas", "size": "6x4m", "location": "Zona Chill", "pricePerDay": 70, "status": "Disponible", "services": "Electricidad", "notes": "Cerca de baños" },
+    { "id": 4, "eventId": 3, "type": "Food Truck", "size": "12x8m", "location": "Entrada Norte", "pricePerDay": 120, "status": "Disponible", "services": "Electricidad, agua", "notes": "Zona tránsito" }
 ]

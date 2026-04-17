@@ -15,7 +15,6 @@ def _to_space_read(space) -> SpaceRead:
     return SpaceRead(
         id=space.id,
         eventId=space.eventId,
-        provider_id=space.provider_id,
         type=space.type,
         size=space.size,
         location=space.location,
@@ -40,10 +39,8 @@ def get_space(space_id: int) -> SpaceRead:
 
 
 @router.post("/spaces", response_model=SpaceRead)
-def create_space(data: SpaceCreate, provider=Depends(require_provider)) -> SpaceRead:
-    data_dict = data.model_dump()
-    data_dict["provider_id"] = provider.id  # Set provider_id to current user
-    space = space_controller.create_space(data_dict)
+def create_space(data: SpaceCreate, admin=Depends(require_admin)) -> SpaceRead:
+    space = space_controller.create_space(data.model_dump())
     return _to_space_read(space)
 
 
@@ -55,7 +52,7 @@ def update_space(space_id: int, data: SpaceUpdate, provider=Depends(require_prov
     return _to_space_read(space)
 
 
-@router.get("/provider/spaces", response_model=List[SpaceRead])
-def list_provider_spaces(provider=Depends(require_provider)) -> List[SpaceRead]:
-    # Asumiendo que space_controller tiene un método para obtener espacios por provider
-    return [_to_space_read(s) for s in space_controller.get_spaces_by_provider(provider.id)]
+@router.delete("/spaces/{space_id}", status_code=204)
+def delete_space(space_id: int, admin=Depends(require_admin)):
+    if not space_controller.delete_space(space_id):
+        raise HTTPException(status_code=404, detail="Space not found")

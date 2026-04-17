@@ -24,7 +24,3 @@ def update_space(space_id: int, data: dict) -> Optional[Space]:
 
 def delete_space(space_id: int) -> bool:
     return factory.spaces.delete(space_id)
-
-
-def get_spaces_by_provider(provider_id: int) -> List[Space]:
-    return factory.spaces.get_spaces_by_provider(provider_id)

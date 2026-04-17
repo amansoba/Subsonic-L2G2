@@ -8,7 +8,6 @@ from pydantic import BaseModel
 class SpaceRead(BaseModel):
     id: int
     eventId: int
-    provider_id: int
     type: str
     size: str
     location: str
@@ -20,7 +19,6 @@ class SpaceRead(BaseModel):
 
 class SpaceCreate(BaseModel):
     eventId: int
-    provider_id: int
     type: str
     size: str
     location: str

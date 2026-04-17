@@ -25,7 +25,6 @@ class InMemorySpaceDAO:
             space = Space(
                 id=item["id"],
                 eventId=item["eventId"],
-                provider_id=item.get("provider_id", 1),  # Default to 1 if not present
                 type=item["type"],
                 size=item["size"],
                 location=item["location"],
@@ -47,7 +46,6 @@ class InMemorySpaceDAO:
         space = Space(
             id=self._next_id,
             eventId=data["eventId"],
-            provider_id=data["provider_id"],
             type=data["type"],
             size=data["size"],
             location=data["location"],
@@ -71,6 +69,3 @@ class InMemorySpaceDAO:
 
     def delete(self, space_id: int) -> bool:
         return self._spaces.pop(space_id, None) is not None
-
-    def get_spaces_by_provider(self, provider_id: int) -> List[Space]:
-        return [space for space in self._spaces.values() if space.provider_id == provider_id]
