@@ -75,13 +75,13 @@ app.mount(
 
 @app.get("/", include_in_schema=False)
 def index(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 @app.get("/{full_path:path}", include_in_schema=False)
 def render_html_pages(full_path: str, request: Request):
     if not full_path or full_path == "/":
-        return templates.TemplateResponse("index.html", {"request": request})
+        return templates.TemplateResponse(request=request, name="index.html")
 
     if not full_path.endswith(".html"):
         raise HTTPException(status_code=404, detail="Not Found")
@@ -104,5 +104,5 @@ def render_html_pages(full_path: str, request: Request):
         if role not in ["provider", "admin"]:
             return RedirectResponse(url="/auth/login.html", status_code=302)
 
-    return templates.TemplateResponse(full_path, {"request": request})
+    return templates.TemplateResponse(request=request, name=full_path)
 

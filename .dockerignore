@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+**/__pycache__
+**/*.py[cod]
+**/*.pyo
+
+# Virtual environments
+.venv
+venv
+env
+
+# Local env files (supply at runtime, never bake into the image)
+backend/.env
+
+# Firebase service-account key (supply at runtime via bind-mount or secret)
+backend/*.json
+
+# Editor / OS artifacts
+.vscode
+.idea
+*.DS_Store
+Thumbs.db
+
+# Scratch / test files
+backend/scratch

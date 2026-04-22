@@ -7,8 +7,8 @@ templates = Jinja2Templates(directory="view/templates")
 
 class View:
     def get_view(self, request: Request, template_name: str, data: dict | None = None):
-        ctx = {"request": request}
+        context = {}
         if data:
-            ctx["data"] = data
-        return templates.TemplateResponse(template_name, ctx)
+            context["data"] = data
+        return templates.TemplateResponse(request=request, name=template_name, context=context)
 
