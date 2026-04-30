@@ -1,18 +1,19 @@
 import logging
 from dotenv import load_dotenv
 
-load_dotenv()  # Load .env before any Firebase/config imports
+# 1. Cargar .env ANTES de cualquier import que lea variables de entorno
+load_dotenv()
 
-import uvicorn
-
-from controller.controller import app
-
-# Show Firestore DAO logs in the console
+# 2. Configurar logging ANTES de importar módulos que loguean al cargarse (ej. firebase_config)
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(name)-36s  %(message)s",
     datefmt="%H:%M:%S",
 )
+
+import uvicorn
+
+from controller.controller import app
 
 
 if __name__ == "__main__":

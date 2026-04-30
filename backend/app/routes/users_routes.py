@@ -39,6 +39,7 @@ def login(payload: LoginRequest, response: Response) -> UserRead:
     except Exception as exc:
         import logging
         logging.getLogger("subsonic.login").exception("Login failed: %s", exc)
+        print(f"[AZURE DEBUG] Error real al verificar login: {exc}") # Added for Azure Logs
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid ID token",

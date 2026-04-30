@@ -12,7 +12,7 @@ from app.models.user import Session, User
 
 MOCKS_DIR = Path(__file__).resolve().parents[2] / "view" / "static" / "mocks"
 
-_USE_FAKE_AUTH = os.getenv("SUBSONIC_USE_FAKE_AUTH", "true").lower() == "true"
+_USE_FAKE_AUTH = os.getenv("SUBSONIC_USE_FAKE_AUTH", "false").lower() == "true"
 
 
 def _is_admin_email(email: str) -> bool:
